@@ -439,6 +439,170 @@
       },
       "problemMatcher": []
     },
+    // powerplatform/PowerPlatformManagedIdentityAgentFrameworkBase
+    {
+      "label": "PowerPlatformManagedIdentityAgentFrameworkBase | Package Solution (Unmanaged)",
+      "type": "process",
+      "command": "dotnet",
+      "args": [
+        "build",
+        "powerplatform/PowerPlatformManagedIdentityAgentFrameworkBase",
+        "--configuration:Debug",
+        "--property:GenerateFullPaths=true",
+        "--consoleloggerparameters:NoSummary"
+      ],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "dedicated",
+        "showReuseMessage": true,
+        "clear": true
+      },
+      "problemMatcher": ["$msCompile"]
+    },
+    {
+      "label": "PowerPlatformManagedIdentityAgentFrameworkBase | Push to Power Platform (Unmanaged)",
+      "dependsOn": [
+        "PowerPlatformManagedIdentityAgentFrameworkBase | Package Solution (Unmanaged)"
+      ],
+      "type": "process",
+      "command": "dotnet",
+      "args": [
+        "tool",
+        "run",
+        "pac",
+        "--",
+        "solution",
+        "import",
+        "--async",
+        "--force-overwrite",
+        "--path",
+        "bin/PowerPlatformManagedIdentityAgentFrameworkBase/Debug/PowerPlatformManagedIdentityAgentFrameworkBase.zip"
+      ],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "dedicated",
+        "showReuseMessage": true,
+        "clear": true
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "PowerPlatformManagedIdentityAgentFrameworkBase | Pull from Power Platform (Unmanaged)",
+      "type": "process",
+      "command": "dotnet",
+      "args": [
+        "tool",
+        "run",
+        "pac",
+        "--",
+        "solution",
+        "sync",
+        "--async",
+        "--packagetype",
+        "Unmanaged",
+        "--solution-folder",
+        "powerplatform/PowerPlatformManagedIdentityAgentFrameworkBase/src"
+      ],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "dedicated",
+        "showReuseMessage": true,
+        "clear": true
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "PowerPlatformManagedIdentityAgentFrameworkBase | Package Solution (Managed)",
+      "type": "process",
+      "command": "dotnet",
+      "args": [
+        "build",
+        "powerplatform/PowerPlatformManagedIdentityAgentFrameworkBase",
+        "--configuration:Release",
+        "--property:GenerateFullPaths=true",
+        "--consoleloggerparameters:NoSummary"
+      ],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "dedicated",
+        "showReuseMessage": true,
+        "clear": true
+      },
+      "problemMatcher": ["$msCompile"]
+    },
+    {
+      "label": "PowerPlatformManagedIdentityAgentFrameworkBase | Push to Power Platform (Managed)",
+      "dependsOn": [
+        "PowerPlatformManagedIdentityAgentFrameworkBase | Package Solution (Managed)"
+      ],
+      "type": "process",
+      "command": "dotnet",
+      "args": [
+        "tool",
+        "run",
+        "pac",
+        "--",
+        "solution",
+        "import",
+        "--async",
+        "--force-overwrite",
+        "--path",
+        "bin/PowerPlatformManagedIdentityAgentFrameworkBase/Release/PowerPlatformManagedIdentityAgentFrameworkBase.zip"
+      ],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "dedicated",
+        "showReuseMessage": true,
+        "clear": true
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "PowerPlatformManagedIdentityAgentFrameworkBase | Upgrade to Power Platform (Managed)",
+      "dependsOn": [
+        "PowerPlatformManagedIdentityAgentFrameworkBase | Push to Power Platform (Managed)"
+      ],
+      "type": "process",
+      "command": "dotnet",
+      "args": [
+        "tool",
+        "run",
+        "pac",
+        "--",
+        "solution",
+        "import",
+        "--async",
+        "--force-overwrite",
+        "--stage-and-upgrade",
+        "--path",
+        "bin/PowerPlatformManagedIdentityAgentFrameworkBase/Release/PowerPlatformManagedIdentityAgentFrameworkBase.zip"
+      ],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "dedicated",
+        "showReuseMessage": true,
+        "clear": true
+      },
+      "problemMatcher": []
+    },
 
     // powerplatform-test/PowerPlatformFederatedIdentityTest
     {
