@@ -1,0 +1,17 @@
+<customapi uniquename="pwrplatf_ValidateAzureKeyVaultReference">
+  <allowedcustomprocessingsteptype>0</allowedcustomprocessingsteptype>
+  <bindingtype>1</bindingtype>
+  <boundentitylogicalname>az_keyvaultreference</boundentitylogicalname>
+  <description default="Validates an Azure Key Vault Reference">
+    <label description="Validates an Azure Key Vault Reference" languagecode="1033" />
+  </description>
+  <displayname default="Validate Azure Key Vault Reference">
+    <label description="Validate Azure Key Vault Reference" languagecode="1033" />
+  </displayname>
+  <iscustomizable>1</iscustomizable>
+  <isfunction>0</isfunction>
+  <isprivate>0</isprivate>
+  <name>Validate Azure Key Vault Reference</name>
+  <plugintypeid />
+  <workflowsdkstepenabled>0</workflowsdkstepenabled>
+</customapi>

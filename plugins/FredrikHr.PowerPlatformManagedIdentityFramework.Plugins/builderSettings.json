@@ -1,0 +1,17 @@
+﻿{
+  "suppressINotifyPattern": true,
+  "suppressGeneratedCodeAttribute": false,
+  "language": "CS",
+  "namespace": "FredrikHr.PowerPlatformManagedIdentityFramework.Plugins.Entities",
+  "generateSdkMessages": false,
+  "generateGlobalOptionSets": false,
+  "emitFieldsClasses": true,
+  "entityTypesFolder": "Entities.g",
+  "messagesTypesFolder": "Messages.g",
+  "optionSetsTypesFolder": "OptionSets.g",
+  "entityNamesFilter": [
+    "az_keyvaultreference"
+  ],
+  "emitEntityETC": false,
+  "emitVirtualAttributes": false
+}

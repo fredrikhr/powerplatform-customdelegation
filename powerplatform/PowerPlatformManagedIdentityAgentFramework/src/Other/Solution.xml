@@ -26,6 +26,11 @@
       <Addresses />
     </Publisher>
     <RootComponents />
-    <MissingDependencies />
+    <MissingDependencies>
+      <MissingDependency>
+        <Required type="ManagedIdentity" solution="PowerPlatformManagedIdentityAgentFrameworkBase (1.0.0)" id="{7999b597-f7b0-4a7c-a785-bf3c6ef4b745}" />
+        <Dependent type="PluginPackage" displayName="pwrplatf_ManagedIdentityAgentFrameworkPlugins" id.uniquename="pwrplatf_ManagedIdentityAgentFrameworkPlugins" />
+      </MissingDependency>
+    </MissingDependencies>
   </SolutionManifest>
 </ImportExportXml>

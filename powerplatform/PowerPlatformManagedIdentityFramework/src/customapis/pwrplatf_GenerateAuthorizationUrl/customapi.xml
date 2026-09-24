@@ -1,0 +1,16 @@
+<customapi uniquename="pwrplatf_GenerateAuthorizationUrl">
+  <allowedcustomprocessingsteptype>1</allowedcustomprocessingsteptype>
+  <bindingtype>0</bindingtype>
+  <description default="Generates the URL for the authorization endpoint to which a user should be redirected to authorize, incl. query parameters">
+    <label description="Generates the URL for the authorization endpoint to which a user should be redirected to authorize, incl. query parameters" languagecode="1033" />
+  </description>
+  <displayname default="Generate User Authorization URL">
+    <label description="Generate User Authorization URL" languagecode="1033" />
+  </displayname>
+  <iscustomizable>1</iscustomizable>
+  <isfunction>0</isfunction>
+  <isprivate>0</isprivate>
+  <name>Generate User Authorization URL</name>
+  <plugintypeid />
+  <workflowsdkstepenabled>0</workflowsdkstepenabled>
+</customapi>
