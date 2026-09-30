@@ -11,5 +11,8 @@
   <isfunction>0</isfunction>
   <isprivate>0</isprivate>
   <name>Validate Json Web Token</name>
+  <plugintypeid>
+    <plugintypeexportkey>762D8781F68926FE9930EA5826FB32FBDED4C7124958727DFE7019D7CA77DC48</plugintypeexportkey>
+  </plugintypeid>
   <workflowsdkstepenabled>0</workflowsdkstepenabled>
 </customapi>

@@ -12,5 +12,8 @@
   <isfunction>0</isfunction>
   <isprivate>0</isprivate>
   <name>Validate Azure Key Vault Reference</name>
+  <plugintypeid>
+    <plugintypeexportkey>FE07B7CAB1F2F97F6CAB61539E73A49D35F8CA1D2A0B869FBDDF6E47D2FE5BA5</plugintypeexportkey>
+  </plugintypeid>
   <workflowsdkstepenabled>0</workflowsdkstepenabled>
 </customapi>

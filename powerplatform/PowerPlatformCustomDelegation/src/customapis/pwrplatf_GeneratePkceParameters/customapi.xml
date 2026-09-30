@@ -11,5 +11,8 @@
   <isfunction>0</isfunction>
   <isprivate>0</isprivate>
   <name>Generate PKCE Parameters</name>
+  <plugintypeid>
+    <plugintypeexportkey>487CC34DB540427750D0CDA6A33959F621757704E40B059DDFC167685500F574</plugintypeexportkey>
+  </plugintypeid>
   <workflowsdkstepenabled>0</workflowsdkstepenabled>
 </customapi>
