@@ -36,7 +36,7 @@
         FredrikHr.PowerPlatformSdkExtensions.MSBuild.Solution;
         "
     >
-      <Version>2.11.2</Version>
+      <Version>2.12.2</Version>
     </PackageVersion>
   </ItemGroup>
   <ItemGroup>
