@@ -1,0 +1,171 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ImportExportXml version="9.2.26092.142" SolutionPackageVersion="9.2" languagecode="1033" generatedBy="CrmLive" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" OrganizationVersion="9.2.26092.142" OrganizationSchemaType="Standard" CRMServerServiceabilityVersion="9.2.26092.00142">
+  <SolutionManifest>
+    <UniqueName>PowerPlatformCustomDelegation</UniqueName>
+    <LocalizedNames>
+      <LocalizedName description="Power Platform Custom Delegation" languagecode="1033" />
+      <LocalizedName description="Power Platform egendefinert delegering" languagecode="1044" />
+    </LocalizedNames>
+    <Descriptions />
+    <Version>3.0.0</Version>
+    <Managed>0</Managed>
+    <Publisher>
+      <UniqueName>fredrikhr</UniqueName>
+      <LocalizedNames>
+        <LocalizedName description="Fredrik Høisæther Rasch" languagecode="1033" />
+        <LocalizedName description="Fredrik Høisæther Rasch" languagecode="1044" />
+      </LocalizedNames>
+      <Descriptions />
+      <EMailAddress>fredrik.rasch@gmail.com</EMailAddress>
+      <SupportingWebsiteUrl>https://github.com/fredrikhr</SupportingWebsiteUrl>
+      <CustomizationPrefix>frh</CustomizationPrefix>
+      <CustomizationOptionValuePrefix>79884</CustomizationOptionValuePrefix>
+      <Addresses />
+    </Publisher>
+    <RootComponents>
+      <RootComponent type="1" schemaName="az_keyvaultreference" behavior="0" />
+      <RootComponent type="1" schemaName="entra_serviceprincipalreference" behavior="0" />
+      <RootComponent type="1" schemaName="msal_confidentialclientconfiguration" behavior="0" />
+      <RootComponent type="1" schemaName="oauth2_clientidreference" behavior="0" />
+      <RootComponent type="1" schemaName="systemuser" behavior="1" />
+      <RootComponent type="29" id="{0a648fb6-8e4f-488b-b90a-13643da5dbf6}" behavior="0" />
+      <RootComponent type="29" id="{11b5958e-d7a5-f111-aaad-002248f4083c}" behavior="0" />
+      <RootComponent type="29" id="{137cf015-12a6-f111-aaad-002248f4083c}" behavior="0" />
+      <RootComponent type="29" id="{16a8946f-e3a5-f111-aaad-002248f4083c}" behavior="0" />
+      <RootComponent type="29" id="{37154fc3-488f-f111-b8db-70a8a52e6a7e}" behavior="0" />
+      <RootComponent type="29" id="{3a34e9fa-b27e-448d-8bf3-a864567450d7}" behavior="0" />
+      <RootComponent type="29" id="{3c417e32-44a5-f111-b8dd-002248f4083c}" behavior="0" />
+      <RootComponent type="29" id="{4c7227e2-95ab-4c1c-aace-ba679db9e755}" behavior="0" />
+      <RootComponent type="29" id="{4e24eda1-b0b5-f111-aaae-002248f4083c}" behavior="0" />
+      <RootComponent type="29" id="{570b67ff-4253-4c62-8c07-db4c48dbceb9}" behavior="0" />
+      <RootComponent type="29" id="{57b00b67-478f-f111-b8db-70a8a52e6a7e}" behavior="0" />
+      <RootComponent type="29" id="{612eff3d-943d-4147-936d-0c27375de926}" behavior="0" />
+      <RootComponent type="29" id="{65469f8c-61b3-f111-aaac-002248f4083c}" behavior="0" />
+      <RootComponent type="29" id="{748294be-8755-4128-af52-1f3950ff5f63}" behavior="0" />
+      <RootComponent type="29" id="{78239806-e4a5-f111-aaad-002248f4083c}" behavior="0" />
+      <RootComponent type="29" id="{7863f57a-99b3-f111-aaac-002248f4083c}" behavior="0" />
+      <RootComponent type="29" id="{8aec3285-498f-f111-b8db-70a8a52e6a7e}" behavior="0" />
+      <RootComponent type="29" id="{8efc014a-e4a5-f111-aaad-002248f4083c}" behavior="0" />
+      <RootComponent type="29" id="{8f3470dd-d9a5-f111-aaad-002248f4083c}" behavior="0" />
+      <RootComponent type="29" id="{8fb36660-af33-4b40-9b0c-f9af6672185a}" behavior="0" />
+      <RootComponent type="29" id="{962c1462-edc4-4d6a-9968-ceeb1eb59f84}" behavior="0" />
+      <RootComponent type="29" id="{a450aa5c-3da5-f111-b8dd-002248f4083c}" behavior="0" />
+      <RootComponent type="29" id="{a681e725-98b3-f111-aaac-002248f4083c}" behavior="0" />
+      <RootComponent type="29" id="{c64b6757-03dd-4cdb-8aad-feb822d6c15e}" behavior="0" />
+      <RootComponent type="29" id="{f0f27465-dba5-f111-aaad-002248f4083c}" behavior="0" />
+      <RootComponent type="29" id="{f5ff65ca-e3a5-f111-aaad-002248f4083c}" behavior="0" />
+      <RootComponent type="29" id="{aa5318e3-46a5-f111-b8dd-002248f4083c}" behavior="0" />
+      <RootComponent type="61" schemaName="pwrplatf_AuthorizationCommonCallback.html" behavior="0" />
+      <RootComponent type="62" schemaName="msal_ConfidentialClientManagement" behavior="0" />
+      <RootComponent type="80" schemaName="msal_ConfidentialClientManagement" behavior="0" />
+      <RootComponent type="9" schemaName="az_keyvaultdataobjecttype" behavior="0" />
+      <RootComponent type="9" schemaName="msal_azurecloudinstance" behavior="0" />
+    </RootComponents>
+    <MissingDependencies>
+      <MissingDependency>
+        <Required type="1" schemaName="keyvaultreference" displayName="Key Vault Reference" solution="ManagedIdentityExtensions (1.0.15.0)">
+          <package appName="ManagedIdentityApp Package" version="1.0.0.0">ManagedIdentityApp_Anchor (1.0.0.0)</package>
+        </Required>
+        <Dependent type="2" schemaName="az_name" displayName="Name" parentSchemaName="az_keyvaultreference" parentDisplayName="Azure Key Vault Reference" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="1" schemaName="keyvaultreference" displayName="Key Vault Reference" solution="ManagedIdentityExtensions (1.0.15.0)">
+          <package appName="ManagedIdentityApp Package" version="1.0.0.0">ManagedIdentityApp_Anchor (1.0.0.0)</package>
+        </Required>
+        <Dependent type="2" schemaName="az_templatesourcecomponentkeytypevalue" displayName="Parent (Component) Type (value)" parentSchemaName="az_keyvaultreference" parentDisplayName="Azure Key Vault Reference" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="1" schemaName="keyvaultreference" displayName="Key Vault Reference" solution="ManagedIdentityExtensions (1.0.15.0)">
+          <package appName="ManagedIdentityApp Package" version="1.0.0.0">ManagedIdentityApp_Anchor (1.0.0.0)</package>
+        </Required>
+        <Dependent type="2" schemaName="az_vaulturi" displayName="Key Vault URI" parentSchemaName="az_keyvaultreference" parentDisplayName="Azure Key Vault Reference" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="1" schemaName="managedidentity" displayName="Managed Identity" solution="ManagedIdentityExtensions (1.0.15.0)">
+          <package appName="ManagedIdentityApp Package" version="1.0.0.0">ManagedIdentityApp_Anchor (1.0.0.0)</package>
+        </Required>
+        <Dependent type="29" displayName="OAuth2 Confidential Client Configuration | Auto Display Name" id="{4e24eda1-b0b5-f111-aaae-002248f4083c}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="1" schemaName="systemuser" displayName="SystemUser" parentSchemaName="" solution="msdyn_PowerAdminSettingsEmail (2.2.3538.1)" />
+        <Dependent type="1" schemaName="systemuser" displayName="SystemUser" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="2" schemaName="keyname" displayName="Key Name" parentSchemaName="keyvaultreference" parentDisplayName="Key Vault Reference" solution="ManagedIdentityExtensions (1.0.15.0)">
+          <package appName="ManagedIdentityApp Package" version="1.0.0.0">ManagedIdentityApp_Anchor (1.0.0.0)</package>
+        </Required>
+        <Dependent type="2" schemaName="az_name" displayName="Name" parentSchemaName="az_keyvaultreference" parentDisplayName="Azure Key Vault Reference" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="2" schemaName="keytype" displayName="Key Type" parentSchemaName="keyvaultreference" parentDisplayName="Key Vault Reference" solution="ManagedIdentityExtensions (1.0.15.0)">
+          <package appName="ManagedIdentityApp Package" version="1.0.0.0">ManagedIdentityApp_Anchor (1.0.0.0)</package>
+        </Required>
+        <Dependent type="2" schemaName="az_templatesourcecomponentkeytypevalue" displayName="Parent (Component) Type (value)" parentSchemaName="az_keyvaultreference" parentDisplayName="Azure Key Vault Reference" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="2" schemaName="keyvaultreferenceid" displayName="KeyVaultReference Id" parentSchemaName="keyvaultreference" parentDisplayName="Key Vault Reference" solution="ManagedIdentityExtensions (1.0.15.0)">
+          <package appName="ManagedIdentityApp Package" version="1.0.0.0">ManagedIdentityApp_Anchor (1.0.0.0)</package>
+        </Required>
+        <Dependent type="2" schemaName="az_name" displayName="Name" parentSchemaName="az_keyvaultreference" parentDisplayName="Azure Key Vault Reference" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="2" schemaName="keyvaultreferenceid" displayName="KeyVaultReference Id" parentSchemaName="keyvaultreference" parentDisplayName="Key Vault Reference" solution="ManagedIdentityExtensions (1.0.15.0)">
+          <package appName="ManagedIdentityApp Package" version="1.0.0.0">ManagedIdentityApp_Anchor (1.0.0.0)</package>
+        </Required>
+        <Dependent type="2" schemaName="az_templatesourcecomponentkeytypevalue" displayName="Parent (Component) Type (value)" parentSchemaName="az_keyvaultreference" parentDisplayName="Azure Key Vault Reference" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="2" schemaName="keyvaultreferenceid" displayName="KeyVaultReference Id" parentSchemaName="keyvaultreference" parentDisplayName="Key Vault Reference" solution="ManagedIdentityExtensions (1.0.15.0)">
+          <package appName="ManagedIdentityApp Package" version="1.0.0.0">ManagedIdentityApp_Anchor (1.0.0.0)</package>
+        </Required>
+        <Dependent type="2" schemaName="az_vaulturi" displayName="Key Vault URI" parentSchemaName="az_keyvaultreference" parentDisplayName="Azure Key Vault Reference" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="2" schemaName="keyvaulturi" displayName="Key Vault Uri" parentSchemaName="keyvaultreference" parentDisplayName="Key Vault Reference" solution="ManagedIdentityExtensions (1.0.15.0)">
+          <package appName="ManagedIdentityApp Package" version="1.0.0.0">ManagedIdentityApp_Anchor (1.0.0.0)</package>
+        </Required>
+        <Dependent type="10" schemaName="az_keyvaultreference_templatesource_keyvaultreference" displayName="az_keyvaultreference_templatesource_keyvaultreference" parentSchemaName="keyvaultreference" parentDisplayName="Key Vault Reference" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="2" schemaName="keyvaulturi" displayName="Key Vault Uri" parentSchemaName="keyvaultreference" parentDisplayName="Key Vault Reference" solution="ManagedIdentityExtensions (1.0.15.0)">
+          <package appName="ManagedIdentityApp Package" version="1.0.0.0">ManagedIdentityApp_Anchor (1.0.0.0)</package>
+        </Required>
+        <Dependent type="2" schemaName="az_vaulturi" displayName="Key Vault URI" parentSchemaName="az_keyvaultreference" parentDisplayName="Azure Key Vault Reference" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="2" schemaName="managedidentityid" displayName="ManagedIdentity Id" parentSchemaName="managedidentity" parentDisplayName="Managed Identity" solution="ManagedIdentityExtensions (1.0.15.0)">
+          <package appName="ManagedIdentityApp Package" version="1.0.0.0">ManagedIdentityApp_Anchor (1.0.0.0)</package>
+        </Required>
+        <Dependent type="29" displayName="OAuth2 Confidential Client Configuration | Auto Display Name" id="{4e24eda1-b0b5-f111-aaae-002248f4083c}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="2" schemaName="name" displayName="Name" parentSchemaName="managedidentity" parentDisplayName="Managed Identity" solution="ManagedIdentityExtensions (1.0.15.0)">
+          <package appName="ManagedIdentityApp Package" version="1.0.0.0">ManagedIdentityApp_Anchor (1.0.0.0)</package>
+        </Required>
+        <Dependent type="29" displayName="OAuth2 Confidential Client Configuration | Auto Display Name" id="{4e24eda1-b0b5-f111-aaae-002248f4083c}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="61" schemaName="msdyn_/Images/AppModule_Default_Icon.png" displayName="msdyn_/Images/AppModule_Default_Icon.png" solution="AppModuleWebResources (2.5)">
+          <package appName="AppModule Web Resources Package" version="2.5">AppModuleWebResources (2.5)</package>
+        </Required>
+        <Dependent type="80" schemaName="msal_ConfidentialClientManagement" displayName="MSAL Confidential Client Management" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="66" schemaName="MscrmControls.ModelForm.ModelFormControl" displayName="MscrmControls.ModelForm.ModelFormControl" solution="BaseCustomControlsCore (9.0.2609.2006)">
+          <package appName="Base Custom Controls" version="9.0.2609.2006">BaseCustomControlsCore (9.0.2609.2006)</package>
+        </Required>
+        <Dependent type="60" displayName="Main Form" parentDisplayName="OAuth2 Confidential Client Configuration" id="{caf944d7-a461-4820-a513-3c8268e8a8e3}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="ManagedIdentity" solution="PowerPlatformCustomDelegationBase (1.0.0)" id="{1304a7e4-ed28-f011-8c4d-7c1e5226ec1f}" />
+        <Dependent type="PluginPackage" displayName="pwrplatf_CustomDelegationPlugins" id.uniquename="pwrplatf_CustomDelegationPlugins" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="SettingDefinition" displayName="AppChannel" solution="msdyn_AppFrameworkInfraExtensions (1.0.0.20)" id.uniquename="AppChannel">
+          <package appName="PowerAppsAppFramework Package" version="1.0.0.26">PowerAppsAppFramework_Anchor (1.0.0.26)</package>
+        </Required>
+        <Dependent type="AppSetting" displayName="parentappmoduleid.uniquename=msal_ConfidentialClientManagement,settingdefinitionid.uniquename=AppChannel" id.parentappmoduleid.uniquename="msal_ConfidentialClientManagement" id.settingdefinitionid.uniquename="AppChannel" />
+      </MissingDependency>
+    </MissingDependencies>
+  </SolutionManifest>
+</ImportExportXml>

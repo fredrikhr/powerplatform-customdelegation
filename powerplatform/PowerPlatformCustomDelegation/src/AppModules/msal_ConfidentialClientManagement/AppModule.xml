@@ -1,0 +1,65 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<AppModule>
+  <UniqueName>msal_ConfidentialClientManagement</UniqueName>
+  <IntroducedVersion>3.0.0</IntroducedVersion>
+  <WebResourceId>953b9fac-1e5e-e611-80d6-00155ded156f</WebResourceId>
+  <OptimizedFor></OptimizedFor>
+  <statecode>0</statecode>
+  <statuscode>1</statuscode>
+  <FormFactor>1</FormFactor>
+  <ClientType>4</ClientType>
+  <NavigationType>0</NavigationType>
+  <AppModuleComponents>
+    <AppModuleComponent type="1" schemaName="az_keyvaultreference" />
+    <AppModuleComponent type="1" schemaName="entra_serviceprincipalreference" />
+    <AppModuleComponent type="1" schemaName="msal_confidentialclientconfiguration" />
+    <AppModuleComponent type="1" schemaName="oauth2_clientidreference" />
+    <AppModuleComponent type="29" id="{8f3470dd-d9a5-f111-aaad-002248f4083c}" />
+    <AppModuleComponent type="29" id="{f0f27465-dba5-f111-aaad-002248f4083c}" />
+    <AppModuleComponent type="29" id="{16a8946f-e3a5-f111-aaad-002248f4083c}" />
+    <AppModuleComponent type="29" id="{f5ff65ca-e3a5-f111-aaad-002248f4083c}" />
+    <AppModuleComponent type="29" id="{78239806-e4a5-f111-aaad-002248f4083c}" />
+    <AppModuleComponent type="29" id="{8efc014a-e4a5-f111-aaad-002248f4083c}" />
+    <AppModuleComponent type="29" id="{a450aa5c-3da5-f111-b8dd-002248f4083c}" />
+    <AppModuleComponent type="29" id="{3c417e32-44a5-f111-b8dd-002248f4083c}" />
+    <AppModuleComponent type="29" id="{aa5318e3-46a5-f111-b8dd-002248f4083c}" />
+    <AppModuleComponent type="29" id="{612eff3d-943d-4147-936d-0c27375de926}" />
+    <AppModuleComponent type="29" id="{0a648fb6-8e4f-488b-b90a-13643da5dbf6}" />
+    <AppModuleComponent type="29" id="{748294be-8755-4128-af52-1f3950ff5f63}" />
+    <AppModuleComponent type="29" id="{3a34e9fa-b27e-448d-8bf3-a864567450d7}" />
+    <AppModuleComponent type="29" id="{4c7227e2-95ab-4c1c-aace-ba679db9e755}" />
+    <AppModuleComponent type="29" id="{962c1462-edc4-4d6a-9968-ceeb1eb59f84}" />
+    <AppModuleComponent type="29" id="{570b67ff-4253-4c62-8c07-db4c48dbceb9}" />
+    <AppModuleComponent type="29" id="{8fb36660-af33-4b40-9b0c-f9af6672185a}" />
+    <AppModuleComponent type="29" id="{c64b6757-03dd-4cdb-8aad-feb822d6c15e}" />
+    <AppModuleComponent type="60" id="{105d48b5-a4b5-f111-aaae-002248f4083c}" />
+    <AppModuleComponent type="60" id="{7db8e9de-a8b5-f111-aaae-002248f4083c}" />
+    <AppModuleComponent type="60" id="{96c503dd-c4b5-f111-aaae-002248f4083c}" />
+    <AppModuleComponent type="60" id="{caf944d7-a461-4820-a513-3c8268e8a8e3}" />
+    <AppModuleComponent type="60" id="{1b2f8336-438f-f111-b8db-70a8a52e6a7e}" />
+    <AppModuleComponent type="60" id="{97467077-e18f-f111-b8db-70a8a52e6a7e}" />
+    <AppModuleComponent type="60" id="{8239b0e6-ab94-f111-b8dc-70a8a52e6a7e}" />
+    <AppModuleComponent type="60" id="{6d656340-6e38-43dd-aaf1-9e9ef1d832ef}" />
+    <AppModuleComponent type="60" id="{ba646f41-d3da-46c3-9b00-a17240778c12}" />
+    <AppModuleComponent type="60" id="{53bf95e1-5fc3-47d7-b4c3-daaac196c78f}" />
+    <AppModuleComponent type="62" schemaName="msal_ConfidentialClientManagement" />
+  </AppModuleComponents>
+  <AppModuleRoleMaps>
+    <Role id="{627090ff-40a3-4053-8790-584edc5be201}" />
+    <Role id="{119f245c-3cc8-4b62-b31c-d1a046ced15d}" />
+  </AppModuleRoleMaps>
+  <LocalizedNames>
+    <LocalizedName description="MSAL Confidential Client Management" languagecode="1033" />
+    <LocalizedName description="Administrasjon for MSAL konfidensielle klienter" languagecode="1044" />
+  </LocalizedNames>
+  <Descriptions>
+    <Description description="Creates and manages identities accessed and used through the Power Platform Managed Identity Service" languagecode="1033" />
+    <Description description="Oppretter og administrerer identiteter som brukes gjennom Power Platform Managed Identity Service" languagecode="1044" />
+  </Descriptions>
+  <appsettings>
+    <appsetting settingdefinitionid.uniquename="AppChannel">
+      <iscustomizable>1</iscustomizable>
+      <value>1</value>
+    </appsetting>
+  </appsettings>
+</AppModule>

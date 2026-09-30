@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<managedidentity managedidentityid="1304a7e4-ed28-f011-8c4d-7c1e5226ec1f" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <applicationid>{00000007-0000-0000-c000-000000000000}</applicationid>
+  <credentialsource>2</credentialsource>
+  <identitytype>0</identitytype>
+  <iscustomizable>1</iscustomizable>
+  <name>Power Platform Managed Identity Service</name>
+  <statecode>0</statecode>
+  <statuscode>1</statuscode>
+  <subjectscope>1</subjectscope>
+  <version>2</version>
+</managedidentity>

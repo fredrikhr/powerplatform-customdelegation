@@ -1,0 +1,46 @@
+<Solution>
+  <Folder Name="/..root/">
+    <File Path=".editorconfig" />
+    <File Path=".gitignore" />
+    <File Path=".gitmodules" />
+    <File Path="dotnet-tools.json" />
+    <File Path="Directory.Build.props" />
+    <File Path="Directory.Build.targets" />
+    <File Path="Directory.Packages.props" />
+    <File Path="LICENSE" />
+    <File Path="README.md" />
+  </Folder>
+  <Folder Name="/.github/">
+    <File Path=".github/dependabot.yml" />
+  </Folder>
+  <Folder Name="/.submodules/" />
+  <Folder Name="/.submodules/fredrikhr/" />
+  <Folder Name="/.submodules/fredrikhr/powerplatform-sdk-extensions/">
+    <Project Path=".submodules/fredrikhr/powerplatform-sdk-extensions/libraries/FredrikHr.PowerPlatformSdkExtensions.PluginRuntime/FredrikHr.PowerPlatformSdkExtensions.PluginRuntime.csproj" />
+  </Folder>
+  <Folder Name="/bld/">
+    <File Path="bld/PluginPackage-SigningCertificate.pfx" />
+  </Folder>
+  <Folder Name="/bld/dataversesandboxworker/">
+    <File Path="bld/dataversesandboxworker/AssemblyList.txt" />
+  </Folder>
+  <Folder Name="/libraries/">
+    <Project Path="libraries/FredrikHr.PowerPlatformCustomDelegation.Common/FredrikHr.PowerPlatformCustomDelegation.Common.csproj" />
+  </Folder>
+  <Folder Name="/plugins/">
+    <File Path="plugins/Directory.Build.props" />
+    <File Path="plugins/Directory.Build.targets" />
+    <Project Path="plugins/FredrikHr.PowerPlatformCustomDelegation.Plugins/FredrikHr.PowerPlatformCustomDelegation.Plugins.csproj" />
+  </Folder>
+  <Folder Name="/powerplatform/">
+    <File Path="powerplatform/Directory.Build.props" />
+    <File Path="powerplatform/Directory.Build.targets" />
+    <Project Path="powerplatform/PowerPlatformCustomDelegation/PowerPlatformCustomDelegation.cdsproj" Type="C#" />
+    <Project Path="powerplatform/PowerPlatformCustomDelegationBase/PowerPlatformCustomDelegationBase.cdsproj" Type="C#" />
+  </Folder>
+  <Folder Name="/powerplatform-test/">
+    <File Path="powerplatform-test/Directory.Build.props" />
+    <File Path="powerplatform-test/Directory.Build.targets" />
+    <Project Path="powerplatform-test/PowerPlatformCustomDelegationTest/PowerPlatformCustomDelegationTest.cdsproj" Type="C#" />
+  </Folder>
+</Solution>

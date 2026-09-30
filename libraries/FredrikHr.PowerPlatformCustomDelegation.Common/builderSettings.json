@@ -1,0 +1,19 @@
+﻿{
+  "suppressINotifyPattern": true,
+  "suppressGeneratedCodeAttribute": false,
+  "language": "CS",
+  "namespace": "FredrikHr.PowerPlatformCustomDelegation.Entities",
+  "generateSdkMessages": false,
+  "generateGlobalOptionSets": false,
+  "emitFieldsClasses": true,
+  "entityTypesFolder": "Entities.g",
+  "messagesTypesFolder": "Messages.g",
+  "optionSetsTypesFolder": "OptionSets.g",
+  "entityNamesFilter": [
+    "az_keyvaultreference",
+    "entra_serviceprincipalreference",
+    "oauth2_clientidreference"
+  ],
+  "emitEntityETC": false,
+  "emitVirtualAttributes": false
+}

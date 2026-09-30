@@ -1,0 +1,15 @@
+<customapi uniquename="pwrplatf_GeneratePkceParameters">
+  <allowedcustomprocessingsteptype>0</allowedcustomprocessingsteptype>
+  <bindingtype>0</bindingtype>
+  <description default="Generates PKCE Code Verifier and Code Challenge according to RFC 7636, Section 4.2">
+    <label description="Generates PKCE Code Verifier and Code Challenge according to RFC 7636, Section 4.2" languagecode="1033" />
+  </description>
+  <displayname default="Generate PKCE Parameters">
+    <label description="Generate PKCE Parameters" languagecode="1033" />
+  </displayname>
+  <iscustomizable>1</iscustomizable>
+  <isfunction>0</isfunction>
+  <isprivate>0</isprivate>
+  <name>Generate PKCE Parameters</name>
+  <workflowsdkstepenabled>0</workflowsdkstepenabled>
+</customapi>

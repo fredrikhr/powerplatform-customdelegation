@@ -3,7 +3,7 @@
     "*.slnx": "xml",
     "*.tasks": "xml"
   },
-  "dotnet.defaultSolution": "PowerPlatform Federated Credentials.slnx",
+  "dotnet.defaultSolution": "PowerPlatform Custom Delegation.slnx",
   "json.schemas": [
     {
       "fileMatch": ["{powerplatform,powerplatform-test}/*/{components,src}/Workflows/*.json"],

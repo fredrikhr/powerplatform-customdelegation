@@ -1,56 +1,14 @@
 {
   "version": "2.0.0",
   "tasks": [
-    // plugins/FredrikHr.PowerPlatformManagedIdentityFramework.Plugins
+    // powerplatform/PowerPlatformCustomDelegation
     {
-      "label": "pwrplatf_ManagedIdentityFrameworkPlugins | Build Plugin Package (Debug)",
-      "type": "shell",
-      "command": "dotnet",
-      "args": [
-        "build",
-        "--configuration:Debug",
-        "plugins/FredrikHr.PowerPlatformManagedIdentityFramework.Plugins"
-      ],
-      "group": "build",
-      "problemMatcher": ["$msCompile"],
-      "presentation": {
-        "echo": true,
-        "reveal": "always",
-        "focus": false,
-        "panel": "dedicated",
-        "showReuseMessage": true,
-        "clear": true
-      }
-    },
-    {
-      "label": "pwrplatf_ManagedIdentityFrameworkPlugins | Build Plugin Package (Release)",
-      "type": "shell",
-      "command": "dotnet",
-      "args": [
-        "build",
-        "--configuration:Release",
-        "plugins/FredrikHr.PowerPlatformManagedIdentityFramework.Plugins"
-      ],
-      "group": "build",
-      "problemMatcher": ["$msCompile"],
-      "presentation": {
-        "echo": true,
-        "reveal": "always",
-        "focus": false,
-        "panel": "dedicated",
-        "showReuseMessage": true,
-        "clear": true
-      }
-    },
-
-    // powerplatform/PowerplatformManagedIdentityFramework
-    {
-      "label": "PowerplatformManagedIdentityFramework | Package Solution (Unmanaged)",
+      "label": "PowerPlatformCustomDelegation | Package Solution (Unmanaged)",
       "type": "process",
       "command": "dotnet",
       "args": [
         "build",
-        "powerplatform/PowerplatformManagedIdentityFramework",
+        "powerplatform/PowerPlatformCustomDelegation",
         "--configuration:Debug",
         "--property:GenerateFullPaths=true",
         "--consoleloggerparameters:NoSummary"
@@ -64,12 +22,14 @@
         "showReuseMessage": true,
         "clear": true
       },
-      "problemMatcher": ["$msCompile"]
+      "problemMatcher": [
+        "$msCompile"
+      ]
     },
     {
-      "label": "PowerplatformManagedIdentityFramework | Push to Power Platform (Unmanaged)",
+      "label": "PowerPlatformCustomDelegation | Push to Power Platform (Unmanaged)",
       "dependsOn": [
-        "PowerplatformManagedIdentityFramework | Package Solution (Unmanaged)"
+        "PowerPlatformCustomDelegation | Package Solution (Unmanaged)"
       ],
       "type": "process",
       "command": "dotnet",
@@ -84,7 +44,7 @@
         "--activate-plugins",
         "--force-overwrite",
         "--path",
-        "bin/PowerplatformManagedIdentityFramework/Debug/PowerplatformManagedIdentityFramework.zip"
+        "bin/PowerPlatformCustomDelegation/Debug/PowerPlatformCustomDelegation.zip"
       ],
       "group": "build",
       "presentation": {
@@ -98,9 +58,9 @@
       "problemMatcher": []
     },
     {
-      "label": "PowerplatformManagedIdentityFramework | Push and Publish to Power Platform (Unmanaged)",
+      "label": "PowerPlatformCustomDelegation | Push and Publish to Power Platform (Unmanaged)",
       "dependsOn": [
-        "PowerplatformManagedIdentityFramework | Package Solution (Unmanaged)"
+        "PowerPlatformCustomDelegation | Package Solution (Unmanaged)"
       ],
       "type": "process",
       "command": "dotnet",
@@ -116,7 +76,7 @@
         "--force-overwrite",
         "--publish-changes",
         "--path",
-        "bin/PowerplatformManagedIdentityFramework/Debug/PowerplatformManagedIdentityFramework.zip"
+        "bin/PowerPlatformCustomDelegation/Debug/PowerPlatformCustomDelegation.zip"
       ],
       "group": "build",
       "presentation": {
@@ -130,7 +90,7 @@
       "problemMatcher": []
     },
     {
-      "label": "PowerplatformManagedIdentityFramework | Pull from Power Platform (Unmanaged)",
+      "label": "PowerPlatformCustomDelegation | Pull from Power Platform (Unmanaged)",
       "type": "process",
       "command": "dotnet",
       "args": [
@@ -144,7 +104,7 @@
         "--packagetype",
         "Unmanaged",
         "--solution-folder",
-        "powerplatform/PowerplatformManagedIdentityFramework/src"
+        "powerplatform/PowerPlatformCustomDelegation/src"
       ],
       "group": "build",
       "presentation": {
@@ -158,12 +118,12 @@
       "problemMatcher": []
     },
     {
-      "label": "PowerplatformManagedIdentityFramework | Package Solution (Managed)",
+      "label": "PowerPlatformCustomDelegation | Package Solution (Managed)",
       "type": "process",
       "command": "dotnet",
       "args": [
         "build",
-        "powerplatform/PowerplatformManagedIdentityFramework",
+        "powerplatform/PowerPlatformCustomDelegation",
         "--configuration:Release",
         "--property:GenerateFullPaths=true",
         "--consoleloggerparameters:NoSummary"
@@ -177,12 +137,14 @@
         "showReuseMessage": true,
         "clear": true
       },
-      "problemMatcher": ["$msCompile"]
+      "problemMatcher": [
+        "$msCompile"
+      ]
     },
     {
-      "label": "PowerplatformManagedIdentityFramework | Push to Power Platform (Managed)",
+      "label": "PowerPlatformCustomDelegation | Push to Power Platform (Managed)",
       "dependsOn": [
-        "PowerplatformManagedIdentityFramework | Package Solution (Managed)"
+        "PowerPlatformCustomDelegation | Package Solution (Managed)"
       ],
       "type": "process",
       "command": "dotnet",
@@ -197,7 +159,7 @@
         "--activate-plugins",
         "--force-overwrite",
         "--path",
-        "bin/PowerplatformManagedIdentityFramework/Release/PowerplatformManagedIdentityFramework.zip"
+        "bin/PowerPlatformCustomDelegation/Release/PowerPlatformCustomDelegation.zip"
       ],
       "group": "build",
       "presentation": {
@@ -211,9 +173,9 @@
       "problemMatcher": []
     },
     {
-      "label": "PowerplatformManagedIdentityFramework | Push and Publish to Power Platform (Managed)",
+      "label": "PowerPlatformCustomDelegation | Push and Publish to Power Platform (Managed)",
       "dependsOn": [
-        "PowerplatformManagedIdentityFramework | Package Solution (Managed)"
+        "PowerPlatformCustomDelegation | Package Solution (Managed)"
       ],
       "type": "process",
       "command": "dotnet",
@@ -229,7 +191,7 @@
         "--force-overwrite",
         "--publish-changes",
         "--path",
-        "bin/PowerplatformManagedIdentityFramework/Release/PowerplatformManagedIdentityFramework.zip"
+        "bin/PowerPlatformCustomDelegation/Release/PowerPlatformCustomDelegation.zip"
       ],
       "group": "build",
       "presentation": {
@@ -243,9 +205,9 @@
       "problemMatcher": []
     },
     {
-      "label": "PowerplatformManagedIdentityFramework | Upgrade to Power Platform (Managed)",
+      "label": "PowerPlatformCustomDelegation | Upgrade to Power Platform (Managed)",
       "dependsOn": [
-        "PowerplatformManagedIdentityFramework | Push to Power Platform (Managed)"
+        "PowerPlatformCustomDelegation | Push to Power Platform (Managed)"
       ],
       "type": "process",
       "command": "dotnet",
@@ -262,7 +224,7 @@
         "--stage-and-upgrade",
         "--publish-changes",
         "--path",
-        "bin/PowerplatformManagedIdentityFramework/Release/PowerplatformManagedIdentityFramework.zip"
+        "bin/PowerPlatformCustomDelegation/Release/PowerPlatformCustomDelegation.zip"
       ],
       "group": "build",
       "presentation": {
@@ -275,14 +237,14 @@
       },
       "problemMatcher": []
     },
-    // powerplatform/PowerplatformManagedIdentityFrameworkManagedIdentity
+    // powerplatform/PowerPlatformCustomDelegationBase
     {
-      "label": "PowerplatformManagedIdentityFrameworkManagedIdentity | Package Solution (Unmanaged)",
+      "label": "PowerPlatformCustomDelegationBase | Package Solution (Unmanaged)",
       "type": "process",
       "command": "dotnet",
       "args": [
         "build",
-        "powerplatform/PowerplatformManagedIdentityFrameworkManagedIdentity",
+        "powerplatform/PowerPlatformCustomDelegationBase",
         "--configuration:Debug",
         "--property:GenerateFullPaths=true",
         "--consoleloggerparameters:NoSummary"
@@ -296,12 +258,14 @@
         "showReuseMessage": true,
         "clear": true
       },
-      "problemMatcher": ["$msCompile"]
+      "problemMatcher": [
+        "$msCompile"
+      ]
     },
     {
-      "label": "PowerplatformManagedIdentityFrameworkManagedIdentity | Push to Power Platform (Unmanaged)",
+      "label": "PowerPlatformCustomDelegationBase | Push to Power Platform (Unmanaged)",
       "dependsOn": [
-        "PowerplatformManagedIdentityFrameworkManagedIdentity | Package Solution (Unmanaged)"
+        "PowerPlatformCustomDelegationBase | Package Solution (Unmanaged)"
       ],
       "type": "process",
       "command": "dotnet",
@@ -315,7 +279,7 @@
         "--async",
         "--force-overwrite",
         "--path",
-        "bin/PowerplatformManagedIdentityFrameworkManagedIdentity/Debug/PowerplatformManagedIdentityFrameworkManagedIdentity.zip"
+        "bin/PowerPlatformCustomDelegationBase/Debug/PowerPlatformCustomDelegationBase.zip"
       ],
       "group": "build",
       "presentation": {
@@ -329,7 +293,7 @@
       "problemMatcher": []
     },
     {
-      "label": "PowerplatformManagedIdentityFrameworkManagedIdentity | Pull from Power Platform (Unmanaged)",
+      "label": "PowerPlatformCustomDelegationBase | Pull from Power Platform (Unmanaged)",
       "type": "process",
       "command": "dotnet",
       "args": [
@@ -343,7 +307,7 @@
         "--packagetype",
         "Unmanaged",
         "--solution-folder",
-        "powerplatform/PowerplatformManagedIdentityFrameworkManagedIdentity/src"
+        "powerplatform/PowerPlatformCustomDelegationBase/src"
       ],
       "group": "build",
       "presentation": {
@@ -357,12 +321,12 @@
       "problemMatcher": []
     },
     {
-      "label": "PowerplatformManagedIdentityFrameworkManagedIdentity | Package Solution (Managed)",
+      "label": "PowerPlatformCustomDelegationBase | Package Solution (Managed)",
       "type": "process",
       "command": "dotnet",
       "args": [
         "build",
-        "powerplatform/PowerplatformManagedIdentityFrameworkManagedIdentity",
+        "powerplatform/PowerPlatformCustomDelegationBase",
         "--configuration:Release",
         "--property:GenerateFullPaths=true",
         "--consoleloggerparameters:NoSummary"
@@ -376,12 +340,14 @@
         "showReuseMessage": true,
         "clear": true
       },
-      "problemMatcher": ["$msCompile"]
+      "problemMatcher": [
+        "$msCompile"
+      ]
     },
     {
-      "label": "PowerplatformManagedIdentityFrameworkManagedIdentity | Push to Power Platform (Managed)",
+      "label": "PowerPlatformCustomDelegationBase | Push to Power Platform (Managed)",
       "dependsOn": [
-        "PowerplatformManagedIdentityFrameworkManagedIdentity | Package Solution (Managed)"
+        "PowerPlatformCustomDelegationBase | Package Solution (Managed)"
       ],
       "type": "process",
       "command": "dotnet",
@@ -395,7 +361,7 @@
         "--async",
         "--force-overwrite",
         "--path",
-        "bin/PowerplatformManagedIdentityFrameworkManagedIdentity/Release/PowerplatformManagedIdentityFrameworkManagedIdentity.zip"
+        "bin/PowerPlatformCustomDelegationBase/Release/PowerPlatformCustomDelegationBase.zip"
       ],
       "group": "build",
       "presentation": {
@@ -409,9 +375,9 @@
       "problemMatcher": []
     },
     {
-      "label": "PowerplatformManagedIdentityFrameworkManagedIdentity | Upgrade to Power Platform (Managed)",
+      "label": "PowerPlatformCustomDelegationBase | Upgrade to Power Platform (Managed)",
       "dependsOn": [
-        "PowerplatformManagedIdentityFrameworkManagedIdentity | Push to Power Platform (Managed)"
+        "PowerPlatformCustomDelegationBase | Push to Power Platform (Managed)"
       ],
       "type": "process",
       "command": "dotnet",
@@ -426,335 +392,7 @@
         "--force-overwrite",
         "--stage-and-upgrade",
         "--path",
-        "bin/PowerplatformManagedIdentityFrameworkManagedIdentity/Release/PowerplatformManagedIdentityFrameworkManagedIdentity.zip"
-      ],
-      "group": "build",
-      "presentation": {
-        "echo": true,
-        "reveal": "always",
-        "focus": false,
-        "panel": "dedicated",
-        "showReuseMessage": true,
-        "clear": true
-      },
-      "problemMatcher": []
-    },
-    // powerplatform/PowerPlatformManagedIdentityAgentFramework
-    {
-      "label": "PowerPlatformManagedIdentityAgentFramework | Package Solution (Unmanaged)",
-      "type": "process",
-      "command": "dotnet",
-      "args": [
-        "build",
-        "powerplatform/PowerPlatformManagedIdentityAgentFramework",
-        "--configuration:Debug",
-        "--property:GenerateFullPaths=true",
-        "--consoleloggerparameters:NoSummary"
-      ],
-      "group": "build",
-      "presentation": {
-        "echo": true,
-        "reveal": "always",
-        "focus": false,
-        "panel": "dedicated",
-        "showReuseMessage": true,
-        "clear": true
-      },
-      "problemMatcher": ["$msCompile"]
-    },
-    {
-      "label": "PowerPlatformManagedIdentityAgentFramework | Push to Power Platform (Unmanaged)",
-      "dependsOn": [
-        "PowerPlatformManagedIdentityAgentFramework | Package Solution (Unmanaged)"
-      ],
-      "type": "process",
-      "command": "dotnet",
-      "args": [
-        "tool",
-        "run",
-        "pac",
-        "--",
-        "solution",
-        "import",
-        "--async",
-        "--force-overwrite",
-        "--path",
-        "bin/PowerPlatformManagedIdentityAgentFramework/Debug/PowerPlatformManagedIdentityAgentFramework.zip"
-      ],
-      "group": "build",
-      "presentation": {
-        "echo": true,
-        "reveal": "always",
-        "focus": false,
-        "panel": "dedicated",
-        "showReuseMessage": true,
-        "clear": true
-      },
-      "problemMatcher": []
-    },
-    {
-      "label": "PowerPlatformManagedIdentityAgentFramework | Pull from Power Platform (Unmanaged)",
-      "type": "process",
-      "command": "dotnet",
-      "args": [
-        "tool",
-        "run",
-        "pac",
-        "--",
-        "solution",
-        "sync",
-        "--async",
-        "--packagetype",
-        "Unmanaged",
-        "--solution-folder",
-        "powerplatform/PowerPlatformManagedIdentityAgentFramework/src"
-      ],
-      "group": "build",
-      "presentation": {
-        "echo": true,
-        "reveal": "always",
-        "focus": false,
-        "panel": "dedicated",
-        "showReuseMessage": true,
-        "clear": true
-      },
-      "problemMatcher": []
-    },
-    {
-      "label": "PowerPlatformManagedIdentityAgentFramework | Package Solution (Managed)",
-      "type": "process",
-      "command": "dotnet",
-      "args": [
-        "build",
-        "powerplatform/PowerPlatformManagedIdentityAgentFramework",
-        "--configuration:Release",
-        "--property:GenerateFullPaths=true",
-        "--consoleloggerparameters:NoSummary"
-      ],
-      "group": "build",
-      "presentation": {
-        "echo": true,
-        "reveal": "always",
-        "focus": false,
-        "panel": "dedicated",
-        "showReuseMessage": true,
-        "clear": true
-      },
-      "problemMatcher": ["$msCompile"]
-    },
-    {
-      "label": "PowerPlatformManagedIdentityAgentFramework | Push to Power Platform (Managed)",
-      "dependsOn": [
-        "PowerPlatformManagedIdentityAgentFramework | Package Solution (Managed)"
-      ],
-      "type": "process",
-      "command": "dotnet",
-      "args": [
-        "tool",
-        "run",
-        "pac",
-        "--",
-        "solution",
-        "import",
-        "--async",
-        "--force-overwrite",
-        "--path",
-        "bin/PowerPlatformManagedIdentityAgentFramework/Release/PowerPlatformManagedIdentityAgentFramework.zip"
-      ],
-      "group": "build",
-      "presentation": {
-        "echo": true,
-        "reveal": "always",
-        "focus": false,
-        "panel": "dedicated",
-        "showReuseMessage": true,
-        "clear": true
-      },
-      "problemMatcher": []
-    },
-    {
-      "label": "PowerPlatformManagedIdentityAgentFramework | Upgrade to Power Platform (Managed)",
-      "dependsOn": [
-        "PowerPlatformManagedIdentityAgentFramework | Push to Power Platform (Managed)"
-      ],
-      "type": "process",
-      "command": "dotnet",
-      "args": [
-        "tool",
-        "run",
-        "pac",
-        "--",
-        "solution",
-        "import",
-        "--async",
-        "--force-overwrite",
-        "--stage-and-upgrade",
-        "--path",
-        "bin/PowerPlatformManagedIdentityAgentFramework/Release/PowerPlatformManagedIdentityAgentFramework.zip"
-      ],
-      "group": "build",
-      "presentation": {
-        "echo": true,
-        "reveal": "always",
-        "focus": false,
-        "panel": "dedicated",
-        "showReuseMessage": true,
-        "clear": true
-      },
-      "problemMatcher": []
-    },
-    // powerplatform/PowerPlatformManagedIdentityAgentFrameworkBase
-    {
-      "label": "PowerPlatformManagedIdentityAgentFrameworkBase | Package Solution (Unmanaged)",
-      "type": "process",
-      "command": "dotnet",
-      "args": [
-        "build",
-        "powerplatform/PowerPlatformManagedIdentityAgentFrameworkBase",
-        "--configuration:Debug",
-        "--property:GenerateFullPaths=true",
-        "--consoleloggerparameters:NoSummary"
-      ],
-      "group": "build",
-      "presentation": {
-        "echo": true,
-        "reveal": "always",
-        "focus": false,
-        "panel": "dedicated",
-        "showReuseMessage": true,
-        "clear": true
-      },
-      "problemMatcher": ["$msCompile"]
-    },
-    {
-      "label": "PowerPlatformManagedIdentityAgentFrameworkBase | Push to Power Platform (Unmanaged)",
-      "dependsOn": [
-        "PowerPlatformManagedIdentityAgentFrameworkBase | Package Solution (Unmanaged)"
-      ],
-      "type": "process",
-      "command": "dotnet",
-      "args": [
-        "tool",
-        "run",
-        "pac",
-        "--",
-        "solution",
-        "import",
-        "--async",
-        "--force-overwrite",
-        "--path",
-        "bin/PowerPlatformManagedIdentityAgentFrameworkBase/Debug/PowerPlatformManagedIdentityAgentFrameworkBase.zip"
-      ],
-      "group": "build",
-      "presentation": {
-        "echo": true,
-        "reveal": "always",
-        "focus": false,
-        "panel": "dedicated",
-        "showReuseMessage": true,
-        "clear": true
-      },
-      "problemMatcher": []
-    },
-    {
-      "label": "PowerPlatformManagedIdentityAgentFrameworkBase | Pull from Power Platform (Unmanaged)",
-      "type": "process",
-      "command": "dotnet",
-      "args": [
-        "tool",
-        "run",
-        "pac",
-        "--",
-        "solution",
-        "sync",
-        "--async",
-        "--packagetype",
-        "Unmanaged",
-        "--solution-folder",
-        "powerplatform/PowerPlatformManagedIdentityAgentFrameworkBase/src"
-      ],
-      "group": "build",
-      "presentation": {
-        "echo": true,
-        "reveal": "always",
-        "focus": false,
-        "panel": "dedicated",
-        "showReuseMessage": true,
-        "clear": true
-      },
-      "problemMatcher": []
-    },
-    {
-      "label": "PowerPlatformManagedIdentityAgentFrameworkBase | Package Solution (Managed)",
-      "type": "process",
-      "command": "dotnet",
-      "args": [
-        "build",
-        "powerplatform/PowerPlatformManagedIdentityAgentFrameworkBase",
-        "--configuration:Release",
-        "--property:GenerateFullPaths=true",
-        "--consoleloggerparameters:NoSummary"
-      ],
-      "group": "build",
-      "presentation": {
-        "echo": true,
-        "reveal": "always",
-        "focus": false,
-        "panel": "dedicated",
-        "showReuseMessage": true,
-        "clear": true
-      },
-      "problemMatcher": ["$msCompile"]
-    },
-    {
-      "label": "PowerPlatformManagedIdentityAgentFrameworkBase | Push to Power Platform (Managed)",
-      "dependsOn": [
-        "PowerPlatformManagedIdentityAgentFrameworkBase | Package Solution (Managed)"
-      ],
-      "type": "process",
-      "command": "dotnet",
-      "args": [
-        "tool",
-        "run",
-        "pac",
-        "--",
-        "solution",
-        "import",
-        "--async",
-        "--force-overwrite",
-        "--path",
-        "bin/PowerPlatformManagedIdentityAgentFrameworkBase/Release/PowerPlatformManagedIdentityAgentFrameworkBase.zip"
-      ],
-      "group": "build",
-      "presentation": {
-        "echo": true,
-        "reveal": "always",
-        "focus": false,
-        "panel": "dedicated",
-        "showReuseMessage": true,
-        "clear": true
-      },
-      "problemMatcher": []
-    },
-    {
-      "label": "PowerPlatformManagedIdentityAgentFrameworkBase | Upgrade to Power Platform (Managed)",
-      "dependsOn": [
-        "PowerPlatformManagedIdentityAgentFrameworkBase | Push to Power Platform (Managed)"
-      ],
-      "type": "process",
-      "command": "dotnet",
-      "args": [
-        "tool",
-        "run",
-        "pac",
-        "--",
-        "solution",
-        "import",
-        "--async",
-        "--force-overwrite",
-        "--stage-and-upgrade",
-        "--path",
-        "bin/PowerPlatformManagedIdentityAgentFrameworkBase/Release/PowerPlatformManagedIdentityAgentFrameworkBase.zip"
+        "bin/PowerPlatformCustomDelegationBase/Release/PowerPlatformCustomDelegationBase.zip"
       ],
       "group": "build",
       "presentation": {
@@ -768,14 +406,14 @@
       "problemMatcher": []
     },
 
-    // powerplatform-test/PowerplatformManagedIdentityFrameworkTest
+    // powerplatform-test/PowerPlatformCustomDelegationTest
     {
-      "label": "PowerplatformManagedIdentityFrameworkTest | Package Solution (Unmanaged)",
+      "label": "PowerPlatformCustomDelegationTest | Package Solution (Unmanaged)",
       "type": "process",
       "command": "dotnet",
       "args": [
         "build",
-        "powerplatform-test/PowerplatformManagedIdentityFrameworkTest",
+        "powerplatform-test/PowerPlatformCustomDelegationTest",
         "--configuration:Debug",
         "--property:GenerateFullPaths=true",
         "--consoleloggerparameters:NoSummary"
@@ -789,12 +427,14 @@
         "showReuseMessage": true,
         "clear": true
       },
-      "problemMatcher": ["$msCompile"]
+      "problemMatcher": [
+        "$msCompile"
+      ]
     },
     {
-      "label": "PowerplatformManagedIdentityFrameworkTest | Push to Power Platform (Unmanaged)",
+      "label": "PowerPlatformCustomDelegationTest | Push to Power Platform (Unmanaged)",
       "dependsOn": [
-        "PowerplatformManagedIdentityFrameworkTest | Package Solution (Unmanaged)"
+        "PowerPlatformCustomDelegationTest | Package Solution (Unmanaged)"
       ],
       "type": "process",
       "command": "dotnet",
@@ -809,7 +449,7 @@
         "--activate-plugins",
         "--force-overwrite",
         "--path",
-        "bin/PowerplatformManagedIdentityFrameworkTest/Debug/PowerplatformManagedIdentityFrameworkTest.zip"
+        "bin/PowerPlatformCustomDelegationTest/Debug/PowerPlatformCustomDelegationTest.zip"
       ],
       "group": "build",
       "presentation": {
@@ -823,7 +463,7 @@
       "problemMatcher": []
     },
     {
-      "label": "PowerplatformManagedIdentityFrameworkTest | Pull from Power Platform (Unmanaged)",
+      "label": "PowerPlatformCustomDelegationTest | Pull from Power Platform (Unmanaged)",
       "type": "process",
       "command": "dotnet",
       "args": [
@@ -837,7 +477,7 @@
         "--packagetype",
         "Unmanaged",
         "--solution-folder",
-        "powerplatform-test/PowerplatformManagedIdentityFrameworkTest/src"
+        "powerplatform-test/PowerPlatformCustomDelegationTest/src"
       ],
       "group": "build",
       "presentation": {
@@ -851,7 +491,6 @@
       "problemMatcher": []
     },
 
-    // Repository solution tasks
     {
       "label": "Build Solution",
       "type": "dotnet",
@@ -865,7 +504,9 @@
         "showReuseMessage": true,
         "clear": true
       },
-      "problemMatcher": ["$msCompile"]
+      "problemMatcher": [
+        "$msCompile"
+      ]
     },
     {
       "label": "Clean Solution",
@@ -880,7 +521,9 @@
         "showReuseMessage": true,
         "clear": true
       },
-      "problemMatcher": ["$msCompile"]
+      "problemMatcher": [
+        "$msCompile"
+      ]
     }
   ]
 }
