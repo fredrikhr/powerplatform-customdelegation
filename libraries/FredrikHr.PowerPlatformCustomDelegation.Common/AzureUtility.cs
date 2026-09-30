@@ -22,6 +22,7 @@ public sealed class AzureUtility(TokenCredential azureCredential)
 
     public static string? GetKeyVaultNameFromUri(Uri keyVaultUri)
     {
+        _ = keyVaultUri ?? throw new ArgumentNullException(nameof(keyVaultUri));
         string hostname = keyVaultUri.Host;
         return KeyVaultNameRegex.Match(hostname)?.Value;
     }
@@ -59,6 +60,7 @@ public sealed class AzureUtility(TokenCredential azureCredential)
         ResourceIdentifier keyVaultResourceId,
         KeyVaultSecretIdentifier keyVaultSecretUriIdentifier)
     {
+        _ = keyVaultResourceId ?? throw new ArgumentNullException(nameof(keyVaultResourceId));
         ResourceIdentifier keyVaultSecretArmId = keyVaultResourceId
             .AppendChildResource("secrets", keyVaultSecretUriIdentifier.Name);
         return keyVaultSecretArmId;
@@ -80,6 +82,7 @@ public sealed class AzureUtility(TokenCredential azureCredential)
         ResourceIdentifier keyVaultResourceId,
         KeyVaultCertificateIdentifier keyVaultCertUriIdentifier)
     {
+        _ = keyVaultResourceId ?? throw new ArgumentNullException(nameof(keyVaultResourceId));
         ResourceIdentifier keyVaultSecretArmId = keyVaultResourceId
             .AppendChildResource("certificates", keyVaultCertUriIdentifier.Name);
         return keyVaultSecretArmId;

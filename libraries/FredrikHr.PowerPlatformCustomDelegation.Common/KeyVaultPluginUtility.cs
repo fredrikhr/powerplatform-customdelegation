@@ -31,6 +31,7 @@ public static class KeyVaultPluginUtility
         int keySizeBits
         )
     {
+        _ = keyVaultSecret ?? throw new ArgumentNullException(nameof(keyVaultSecret));
         string keyVaultSecretId = keyVaultSecret.Id.ToString();
         byte[] keyDerivationSalt = Utf8Encoding.GetBytes(keyVaultSecretId);
         const int bitsPerByte = 8;
@@ -53,6 +54,7 @@ public static class KeyVaultPluginUtility
         KeyVaultCertificate keyVaultCertificate
         )
     {
+        _ = keyVaultCertificate ?? throw new ArgumentNullException(nameof(keyVaultCertificate));
         X509Certificate2 x509Certificate = new(keyVaultCertificate.Cer);
         return new(x509Certificate, keyVaultCertificate.Id.ToString());
     }
@@ -94,6 +96,7 @@ public static class KeyVaultPluginUtility
         string? keyId = null
         )
     {
+        _ = keyVaultCertificateInfo ?? throw new ArgumentNullException(nameof(keyVaultCertificateInfo));
         CryptographyClientOptions keyVaultCryptoClientOptions = new();
         KeyResolver keyVaultKeyResolver = new(tokenCredential, keyVaultCryptoClientOptions);
         CryptographyClient keyVaultCryptoClient = await keyVaultKeyResolver
@@ -220,6 +223,7 @@ public static class KeyVaultPluginUtility
         bool sendX5c = false
         )
     {
+        _ = keyVaultCertificateInfo ?? throw new ArgumentNullException(nameof(keyVaultCertificateInfo));
         using var sha1 = SHA1.Create();
         string keyVaultCertificateThumbprint = Base64UrlEncoder.Encode(
             sha1.ComputeHash(keyVaultCertificateInfo.Cer)
