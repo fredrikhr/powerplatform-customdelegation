@@ -33,13 +33,14 @@ public sealed class MsalPluginUtility
 
     public MsalPluginUtility(
         IServiceProvider serviceProvider,
-        PluginExecutionInformation executionInformation)
+        PluginExecutionInformation executionInformation,
+        AzureUtility azureUtility)
     {
         _serviceProvider = serviceProvider;
         var context = serviceProvider.Get<IPluginExecutionContext>();
         _inputs = context.InputParameters;
         _executionInformation = executionInformation;
-        _azureUtility = new(new PowerPlatformFicTokenCredential(serviceProvider));
+        _azureUtility = azureUtility;
 
         _isApplicationSelfRequest = new(EvaluateIsApplicationSelfRequest);
         _isPluginIdentityRequest = new(EvaluateIsApplicationPluginIdentityRequest);
@@ -492,41 +493,67 @@ public sealed class MsalPluginUtility
         }
     }
 
-    public async Task FillMissingCredentialSourcePropertiesAsync()
+    public void EnsureMsalConfidentialClientIsAuthorized(
+        PluginClientCredentialsSource? credentialsSource = null)
     {
-        PluginClientCredentialsSource? credsSource = ClientCredentialsSource;
-        if (credsSource is null) return;
-
-        if (credsSource.KeyVaultName is string kvName &&
-            credsSource.KeyVaultUri is null)
+        var context = _serviceProvider.Get<IPluginExecutionContext2>();
+        if (!IsApplicationRequestingSelf &&
+            !_executionInformation.UserHasImpersonationPrivilege)
         {
-            credsSource.KeyVaultUri = new($"https://{kvName}.vault.azure.net", UriKind.Absolute);
+            throw new InvalidPluginExecutionException(
+                httpStatus: PluginHttpStatusCode.BadRequest,
+                message: $"User (Entra ID Object ID: {context.UserAzureActiveDirectoryObjectId}, Dataverse System User ID: {context.UserId}) does not have required privilege '{PluginExecutionInformation.PrivilegeNameImpersonation}'."
+                );
         }
-        if (credsSource.KeyVaultUri is Uri kvUri)
+
+        if (IsRequestedApplicationPluginIdentity)
         {
-            credsSource.KeyVaultResourceIdentifier ??= await _azureUtility
-                .GetKeyVaultResourceIdentifier(kvUri)
-                .ConfigureAwait(continueOnCapturedContext: false);
-            if (credsSource.KeyVaultResourceIdentifier is ResourceIdentifier kvArmId &&
-                credsSource.KeyVaultObjectName is string kvObjName)
-            {
-                switch (credsSource.KeyVaultObjectType)
-                {
-                    case keytype.Secret:
-                        KeyVaultSecretIdentifier kvSecretUriId = credsSource.KeyVaultSecretIdentifier ??=
-                            KeyVaultPluginUtility.GetKeyVaultSecretIdentifier(kvUri, kvObjName, credsSource.KeyVaultObjectVersion);
-                        credsSource.KeyVaultObjectResourceIdentifier ??= AzureUtility
-                            .GetKeyVaultResourceIdentifier(kvArmId, kvSecretUriId);
-                        break;
-                    case keytype.Certificate:
-                    case keytype.CertificateWithX5c:
-                        KeyVaultCertificateIdentifier kvCertUriId = credsSource.KeyVaultCertificateIdentifier ??=
-                            KeyVaultPluginUtility.GetKeyVaultCertificateIdentifier(kvUri, kvObjName, credsSource.KeyVaultObjectVersion);
-                        credsSource.KeyVaultObjectResourceIdentifier ??= AzureUtility
-                            .GetKeyVaultResourceIdentifier(kvArmId, kvCertUriId);
-                        break;
-                }
-            }
+            return;
+        }
+
+        if (MsalClientOptions is null)
+        {
+            throw new InvalidPluginExecutionException(
+                httpStatus: PluginHttpStatusCode.BadRequest,
+                message: $"Missing required input parameters specifying the application for which an access token should be acquired."
+                );
+        }
+
+        credentialsSource ??= ClientCredentialsSource;
+        credentialsSource?.FillMissingPropertiesAsync(_azureUtility)
+            .GetAwaiter().GetResult();
+        if (credentialsSource is not { KeyVaultObjectResourceIdentifier: ResourceIdentifier kvObjArmId })
+        {
+            throw new InvalidPluginExecutionException(
+                httpStatus: PluginHttpStatusCode.BadRequest,
+                message: $"Missing required input parameters specifying the credential source from Key Vault to authenticate the requested application identity."
+                );
+        }
+
+        KeyVaultDataAccessEvaluator kvAccessEval = new(
+            _azureUtility.ArmClient,
+            kvObjArmId,
+            context.UserAzureActiveDirectoryObjectId
+            );
+        KeyVaultDataAccessPermisions kvAccessPerms = kvAccessEval
+            .EvaluateAccessAsync()
+            .GetAwaiter().GetResult();
+        switch (credentialsSource.KeyVaultObjectType)
+        {
+            case keytype.Secret
+            when !kvAccessPerms.HasFlag(KeyVaultDataAccessPermisions.GetSecret):
+                throw new InvalidPluginExecutionException(
+                    httpStatus: PluginHttpStatusCode.Forbidden,
+                    message: $"User (Entra ID Object ID: {context.UserAzureActiveDirectoryObjectId}, Dataverse System User ID: {context.UserId}) does not have required role assignment to use the specified Key Vault Secret as a credential for application authentication. User is not authorized for the Get Secret Key Vault action on the specified secret."
+                    );
+            case keytype.Certificate
+            when !kvAccessPerms.HasFlag(KeyVaultDataAccessPermisions.ReadCertificateProperties | KeyVaultDataAccessPermisions.SignWithKey):
+            case keytype.CertificateWithX5c
+            when !kvAccessPerms.HasFlag(KeyVaultDataAccessPermisions.ReadCertificateProperties | KeyVaultDataAccessPermisions.SignWithKey):
+                throw new InvalidPluginExecutionException(
+                    httpStatus: PluginHttpStatusCode.Forbidden,
+                    message: $"User (Entra ID Object ID: {context.UserAzureActiveDirectoryObjectId}, Dataverse System User ID: {context.UserId}) does not have required role assignment to use the specified Key Vault Certificate as a credential for application authentication. User is not authorized either for the Get Certificate Properties og Sign action on the specified certificate."
+                    );
         }
     }
 
