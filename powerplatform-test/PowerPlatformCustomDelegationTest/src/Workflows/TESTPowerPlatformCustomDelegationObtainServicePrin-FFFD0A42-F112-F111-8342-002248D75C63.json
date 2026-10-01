@@ -81,12 +81,20 @@
               "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
             },
             "parameters": {
-              "actionName": "pwrplatf_AcquireServicePrincipalAccessToken",
-              "item/KeyVaultUri": "@parameters('TEST | Power Platform Custom Delegation | Key Vault URI (test_fredrikhr_customdelegation_keyvaulturi)')",
-              "item/KeyVaultObjectType": 0,
-              "item/KeyVaultObjectName": "@parameters('TEST | Power Platform Custom Delegation | Key Vault Secret Name (test_fredrikhr_customdelegation_keyvaultsecretname)')",
-              "item/ApplicationId": "@parameters('TEST | Power Platform Custom Delegation | App ID (test_fredrikhr_customdelegation_appid)')",
-              "item/ResourceId": "https://service.flow.microsoft.com/"
+              "actionName": "pwrplatf_AcquireAccessTokenForApplication",
+              "item/ApplicationEntity": {
+                "@@odata.type": "Microsoft.Dynamics.CRM.managedidentity",
+                "applicationid": "@parameters('TEST | Power Platform Custom Delegation | App ID (test_fredrikhr_customdelegation_appid)')"
+              },
+              "item/ClientCredentialsSourceEntity": {
+                "@@odata.type": "Microsoft.Dynamics.CRM.keyvaultreference",
+                "keytype": 0,
+                "keyvaulturi": "@parameters('TEST | Power Platform Custom Delegation | Key Vault URI (test_fredrikhr_customdelegation_keyvaulturi)')",
+                "keyname": "@parameters('TEST | Power Platform Custom Delegation | Key Vault Secret Name (test_fredrikhr_customdelegation_keyvaultsecretname)')"
+              },
+              "item/Scopes": [
+                "https://service.flow.microsoft.com/.default"
+              ]
             },
             "authentication": {
               "type": "Raw",
@@ -135,91 +143,9 @@
             }
           }
         },
-        "Key_Vault_Secret_Resource_ID": {
-          "runAfter": {
-            "Power_Automate_Environment_Details_(Secret)": [
-              "Succeeded"
-            ]
-          },
-          "metadata": {
-            "operationMetadataId": "deff1d14-1646-4706-942a-6073bdeda533"
-          },
-          "type": "Compose",
-          "inputs": "@body('Power_Automate_Authorization_Grant_(Secret)')['KeyVaultResourceIdentifier']"
-        },
-        "Power_Automate_Authorization_Grant_(Secret_Resource_ID)": {
-          "runAfter": {
-            "Key_Vault_Secret_Resource_ID": [
-              "Succeeded"
-            ]
-          },
-          "metadata": {
-            "operationMetadataId": "bde09a47-7622-4fa3-a735-e673646fdbb5"
-          },
-          "type": "OpenApiConnection",
-          "inputs": {
-            "host": {
-              "connectionName": "dataverse",
-              "operationId": "PerformUnboundAction",
-              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
-            },
-            "parameters": {
-              "actionName": "pwrplatf_AcquireServicePrincipalAccessToken",
-              "item/KeyVaultObjectType": 0,
-              "item/ApplicationId": "@parameters('TEST | Power Platform Custom Delegation | App ID (test_fredrikhr_customdelegation_appid)')",
-              "item/KeyVaultResourceIdentifier": "@outputs('Key_Vault_Secret_Resource_ID')",
-              "item/ResourceId": "https://service.flow.microsoft.com/"
-            },
-            "authentication": {
-              "type": "Raw",
-              "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
-            }
-          },
-          "runtimeConfiguration": {
-            "secureData": {
-              "properties": [
-                "outputs"
-              ]
-            }
-          }
-        },
-        "Power_Automate_Authorization_Header_(Secret_Resource_ID)": {
-          "runAfter": {
-            "Power_Automate_Authorization_Grant_(Secret_Resource_ID)": [
-              "Succeeded"
-            ]
-          },
-          "metadata": {
-            "operationMetadataId": "717c74f2-8f0f-4e0b-9c64-909d66cabab9"
-          },
-          "type": "Compose",
-          "inputs": "Bearer @{body('Power_Automate_Authorization_Grant_(Secret_Resource_ID)')['AccessToken']}"
-        },
-        "Power_Automate_Environment_Details_(Secret_Resource_ID)": {
-          "runAfter": {
-            "Power_Automate_Authorization_Header_(Secret_Resource_ID)": [
-              "Succeeded"
-            ]
-          },
-          "metadata": {
-            "operationMetadataId": "cd56469e-de17-4354-af7b-cba7cd1dd563"
-          },
-          "type": "Http",
-          "inputs": {
-            "method": "GET",
-            "uri": "@{body('Power_Automate_Environment_Details_(Secret)')['properties']['runtimeEndpoints']['microsoft.Flow']}/providers/microsoft.Flow/environments/@{workflow()['tags']['environmentName']}",
-            "queries": {
-              "api-version": "2026-01-01"
-            },
-            "authentication": {
-              "type": "Raw",
-              "value": "@outputs('Power_Automate_Authorization_Header_(Secret_Resource_ID)')"
-            }
-          }
-        },
         "Dataverse_Authorization_Grant_(Secret)": {
           "runAfter": {
-            "Power_Automate_Environment_Details_(Secret_Resource_ID)": [
+            "Power_Automate_Environment_Details_(Secret)": [
               "Succeeded"
             ]
           },
@@ -234,11 +160,20 @@
               "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
             },
             "parameters": {
-              "actionName": "pwrplatf_AcquireServicePrincipalAccessToken",
-              "item/KeyVaultObjectType": 0,
-              "item/ApplicationId": "@parameters('TEST | Power Platform Custom Delegation | App ID (test_fredrikhr_customdelegation_appid)')",
-              "item/KeyVaultResourceIdentifier": "@outputs('Key_Vault_Secret_Resource_ID')",
-              "item/ResourceId": "https://@{uriHost(body('Power_Automate_Environment_Details_(Secret_Resource_ID)')['properties']['linkedEnvironmentMetadata']['instanceUrl'])}"
+              "actionName": "pwrplatf_AcquireAccessTokenForApplication",
+              "item/ApplicationEntity": {
+                "@@odata.type": "Microsoft.Dynamics.CRM.managedidentity",
+                "applicationid": "@parameters('TEST | Power Platform Custom Delegation | App ID (test_fredrikhr_customdelegation_appid)')"
+              },
+              "item/ClientCredentialsSourceEntity": {
+                "@@odata.type": "Microsoft.Dynamics.CRM.keyvaultreference",
+                "keytype": 0,
+                "keyvaulturi": "@parameters('TEST | Power Platform Custom Delegation | Key Vault URI (test_fredrikhr_customdelegation_keyvaulturi)')",
+                "keyname": "@parameters('TEST | Power Platform Custom Delegation | Key Vault Secret Name (test_fredrikhr_customdelegation_keyvaultsecretname)')"
+              },
+              "item/Scopes": [
+                "https://@{uriHost(body('Power_Automate_Environment_Details_(Secret)')['properties']['linkedEnvironmentMetadata']['instanceUrl'])}/.default"
+              ]
             },
             "authentication": {
               "type": "Raw",
@@ -277,18 +212,24 @@
           "type": "Http",
           "inputs": {
             "method": "POST",
-            "uri": "@{body('Power_Automate_Environment_Details_(Secret_Resource_ID)')['properties']['linkedEnvironmentMetadata']['instanceApiUrl']}/api/data/v@{body('Power_Automate_Environment_Details_(Secret_Resource_ID)')['properties']['linkedEnvironmentMetadata']['version']}/pwrplatf_AcquireServicePrincipalAccessToken",
+            "uri": "@{body('Power_Automate_Environment_Details_(Secret)')['properties']['linkedEnvironmentMetadata']['instanceApiUrl']}/api/data/v@{body('Power_Automate_Environment_Details_(Secret)')['properties']['linkedEnvironmentMetadata']['version']}/pwrplatf_AcquireAccessTokenForApplication",
             "headers": {
               "Accept": "application/json",
-              "OData-Version": "4.0",
+              "OData-Version": "4.01",
               "OData-MaxVersion": "4.01",
               "Content-Type": "application/json; charset=utf-8",
               "Prefer": "odata.include-annotations=*"
             },
             "body": {
-              "ResourceId": "https://@{uriHost(body('Power_Automate_Environment_Details_(Secret_Resource_ID)')['properties']['linkedEnvironmentMetadata']['instanceUrl'])}",
-              "KeyVaultResourceIdentifier": "@outputs('Key_Vault_Secret_Resource_ID')",
-              "KeyVaultObjectType": 0
+              "ClientCredentialsSourceEntity": {
+                "@@type": "Microsoft.Dynamics.CRM.keyvaultreference",
+                "keytype": 0,
+                "keyvaulturi": "@parameters('TEST | Power Platform Custom Delegation | Key Vault URI (test_fredrikhr_customdelegation_keyvaulturi)')",
+                "keyname": "@parameters('TEST | Power Platform Custom Delegation | Key Vault Secret Name (test_fredrikhr_customdelegation_keyvaultsecretname)')"
+              },
+              "Scopes": [
+                "https://@{uriHost(body('Power_Automate_Environment_Details_(Secret)')['properties']['linkedEnvironmentMetadata']['instanceUrl'])}/.default"
+              ]
             },
             "authentication": {
               "type": "Raw",

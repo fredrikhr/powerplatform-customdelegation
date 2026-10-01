@@ -85,8 +85,11 @@
               "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
             },
             "parameters": {
-              "actionName": "pwrplatf_AcquireAccessTokenForManagedIdentity",
-              "item/ManagedIdentityId": "1304a7e4-ed28-f011-8c4d-7c1e5226ec1f"
+              "actionName": "pwrplatf_AcquireAccessTokenForApplication",
+              "item/Application": "/managedidentities(@{body('Managed_Identity')['managedidentityid']})",
+              "item/Scopes": [
+                "@{body('Managed_Identity')['applicationid']}/.default"
+              ]
             },
             "authentication": {
               "type": "Raw",
