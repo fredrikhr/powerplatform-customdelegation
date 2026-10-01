@@ -1,0 +1,11 @@
+<customapiresponseproperty uniquename="TokenInformation">
+  <description default="If the acquired access token is a JWT, provides the decoded information stored in the JWT">
+    <label description="If the acquired access token is a JWT, provides the decoded information stored in the JWT" languagecode="1033" />
+  </description>
+  <displayname default="Token Information">
+    <label description="Token Information" languagecode="1033" />
+  </displayname>
+  <iscustomizable>1</iscustomizable>
+  <name>TokenInformation</name>
+  <type>3</type>
+</customapiresponseproperty>

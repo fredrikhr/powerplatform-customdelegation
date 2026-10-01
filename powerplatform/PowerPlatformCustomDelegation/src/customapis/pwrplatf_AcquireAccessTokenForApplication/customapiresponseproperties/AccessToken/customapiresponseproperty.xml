@@ -1,0 +1,11 @@
+<customapiresponseproperty uniquename="AccessToken">
+  <description default="The acquired access token">
+    <label description="The acquired access token" languagecode="1033" />
+  </description>
+  <displayname default="Access Token">
+    <label description="Access Token" languagecode="1033" />
+  </displayname>
+  <iscustomizable>1</iscustomizable>
+  <name>AccessToken</name>
+  <type>10</type>
+</customapiresponseproperty>

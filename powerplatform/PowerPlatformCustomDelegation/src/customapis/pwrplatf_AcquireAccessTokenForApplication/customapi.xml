@@ -1,0 +1,18 @@
+<customapi uniquename="pwrplatf_AcquireAccessTokenForApplication">
+  <allowedcustomprocessingsteptype>0</allowedcustomprocessingsteptype>
+  <bindingtype>0</bindingtype>
+  <description default="Acquires an access token for the specified application identity">
+    <label description="Acquires an access token for the specified application identity" languagecode="1033" />
+  </description>
+  <displayname default="Acquire Access Token for Application">
+    <label description="Acquire Access Token for Application" languagecode="1033" />
+  </displayname>
+  <iscustomizable>1</iscustomizable>
+  <isfunction>0</isfunction>
+  <isprivate>0</isprivate>
+  <name>Acquire Access Token for Application</name>
+  <plugintypeid>
+    <plugintypeexportkey>D259C9AA94AEA45AE17CB63B5D926E8CBF22CDF14470E77549C5F4D0952BD1C4</plugintypeexportkey>
+  </plugintypeid>
+  <workflowsdkstepenabled>0</workflowsdkstepenabled>
+</customapi>

@@ -1,0 +1,12 @@
+<customapirequestparameter uniquename="FmiPath">
+  <description default="If the requested application is an Entra ID Agent Blueprint, specifies the App (Client) ID for the Agent Identity that will be requested subsequently">
+    <label description="If the requested application is an Entra ID Agent Blueprint, specifies the App (Client) ID for the Agent Identity that will be requested subsequently" languagecode="1033" />
+  </description>
+  <displayname default="Agent Identity App ID">
+    <label description="Agent Identity App ID" languagecode="1033" />
+  </displayname>
+  <iscustomizable>1</iscustomizable>
+  <isoptional>1</isoptional>
+  <name>FmiPath</name>
+  <type>10</type>
+</customapirequestparameter>

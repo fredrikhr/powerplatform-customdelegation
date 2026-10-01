@@ -1,0 +1,12 @@
+<customapirequestparameter uniquename="Scopes">
+  <description default="The scopes to request when acquiring the access token">
+    <label description="The scopes to request when acquiring the access token" languagecode="1033" />
+  </description>
+  <displayname default="Scopes">
+    <label description="Scopes" languagecode="1033" />
+  </displayname>
+  <iscustomizable>1</iscustomizable>
+  <isoptional>1</isoptional>
+  <name>Scopes</name>
+  <type>11</type>
+</customapirequestparameter>

@@ -1,0 +1,12 @@
+<customapirequestparameter uniquename="ApplicationEntity">
+  <description default="Entity object specifying the requested application. Entity ID can be omitted">
+    <label description="Entity object specifying the requested application. Entity ID can be omitted" languagecode="1033" />
+  </description>
+  <displayname default="Application (Inline)">
+    <label description="Application (Inline)" languagecode="1033" />
+  </displayname>
+  <iscustomizable>1</iscustomizable>
+  <isoptional>1</isoptional>
+  <name>ApplicationEntity</name>
+  <type>3</type>
+</customapirequestparameter>
