@@ -10,7 +10,7 @@ public sealed class AcquireForClientAccessTokenPlugin()
 {
     internal static class InputParameterNames
     {
-        internal const string Resource = nameof(Resource);
+        internal const string Scopes = nameof(Scopes);
     }
 
     protected override string AcquireAccessTokenCore(
@@ -25,21 +25,10 @@ public sealed class AcquireForClientAccessTokenPlugin()
         ParameterCollection inputs = context.InputParameters;
 
         _ = inputs.TryGetValue(
-            InputParameterNames.Resource,
-            out string? resource
+            InputParameterNames.Scopes,
+            out string[]? scopes
             );
-        if (string.IsNullOrEmpty(resource))
-        {
-            resource = info.ApplicationSystemUser?.ApplicationId?.ToString();
-            if (string.IsNullOrEmpty(resource))
-            {
-                throw new InvalidPluginExecutionException(
-                    httpStatus: PluginHttpStatusCode.BadRequest,
-                    message: $"Missing input parameter '{InputParameterNames.Resource}'."
-                    );
-            }
-        }
-        string[] scopes = [$"{resource}/.default"];
+        scopes ??= [];
 
         msalUtility.EnsureMsalConfidentialClientIsAuthorized();
 

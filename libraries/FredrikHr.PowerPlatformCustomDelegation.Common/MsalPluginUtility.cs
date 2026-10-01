@@ -123,7 +123,6 @@ public sealed class MsalPluginUtility
         Uri idpInstanceUri = idpAuthorityInfo.AzureAuthorityHost;
         string idpInstanceUrl = idpInstanceUri.ToString();
 
-        Entity? applicationEntityInput;
         if (_inputs.TryGetValue(
             InputParameterNames.Application,
             out EntityReference applicationEntityReference))
@@ -168,7 +167,7 @@ public sealed class MsalPluginUtility
         }
         if (_inputs.TryGetValue(
             InputParameterNames.ApplicationEntity,
-            out applicationEntityInput) &&
+            out Entity? applicationEntityInput) &&
             applicationEntityInput is not null)
         {
             switch (applicationEntityInput.LogicalName)
