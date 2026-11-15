@@ -1,0 +1,14 @@
+<customapirequestparameter uniquename="Prompt">
+  <description default="Indicates the type of user interaction that is required. OIDC prompt query parameter value.">
+    <label description="Indicates the type of user interaction that is required. OIDC prompt query parameter value." languagecode="1033" />
+    <label description="Indicates the type of user interaction that is required. OIDC prompt query parameter value." languagecode="1044" />
+  </description>
+  <displayname default="Prompt Behavior">
+    <label description="Prompt Behavior" languagecode="1033" />
+    <label description="Prompt Behavior" languagecode="1044" />
+  </displayname>
+  <iscustomizable>1</iscustomizable>
+  <isoptional>1</isoptional>
+  <name>Prompt</name>
+  <type>10</type>
+</customapirequestparameter>

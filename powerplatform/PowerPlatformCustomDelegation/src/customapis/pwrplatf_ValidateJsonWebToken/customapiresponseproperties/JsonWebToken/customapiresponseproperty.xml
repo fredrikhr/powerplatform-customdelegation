@@ -1,11 +1,1 @@
-<customapiresponseproperty uniquename="JsonWebToken">
-  <description default="The JWT details parsed from the validated token.">
-    <label description="The JWT details parsed from the validated token." languagecode="1033" />
-  </description>
-  <displayname default="JSON Web Token">
-    <label description="JSON Web Token" languagecode="1033" />
-  </displayname>
-  <iscustomizable>1</iscustomizable>
-  <name>JsonWebToken</name>
-  <type>3</type>
-</customapiresponseproperty>
+<customapiresponseproperty uniquename="JsonWebToken"></customapiresponseproperty>

@@ -1,0 +1,13 @@
+<customapiresponseproperty uniquename="State">
+  <description default="Authorization state">
+    <label description="Authorization state" languagecode="1033" />
+    <label description="Kontekst for autentifisering" languagecode="1044" />
+  </description>
+  <displayname default="State">
+    <label description="State" languagecode="1033" />
+    <label description="Kontekst" languagecode="1044" />
+  </displayname>
+  <iscustomizable>1</iscustomizable>
+  <name>State</name>
+  <type>10</type>
+</customapiresponseproperty>

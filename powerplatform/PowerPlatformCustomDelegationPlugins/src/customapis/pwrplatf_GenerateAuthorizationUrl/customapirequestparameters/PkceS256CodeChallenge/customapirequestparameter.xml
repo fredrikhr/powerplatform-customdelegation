@@ -1,0 +1,14 @@
+<customapirequestparameter uniquename="PkceS256CodeChallenge">
+  <description default="A PKCE code challenge according to RFC 7636, Section 4.2 using the S256 code challenge method">
+    <label description="A PKCE code challenge according to RFC 7636, Section 4.2 using the S256 code challenge method" languagecode="1033" />
+    <label description="A PKCE code challenge according to RFC 7636, Section 4.2 using the S256 code challenge method" languagecode="1044" />
+  </description>
+  <displayname default="PKCE Code Challenge">
+    <label description="PKCE Code Challenge" languagecode="1033" />
+    <label description="PKCE Code Challenge" languagecode="1044" />
+  </displayname>
+  <iscustomizable>1</iscustomizable>
+  <isoptional>0</isoptional>
+  <name>PkceS256CodeChallenge</name>
+  <type>10</type>
+</customapirequestparameter>

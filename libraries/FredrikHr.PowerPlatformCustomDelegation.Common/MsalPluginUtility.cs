@@ -1,9 +1,7 @@
 using Azure.Core;
 using Azure.Security.KeyVault.Secrets;
-using Azure.Security.KeyVault.Certificates;
 
 using Microsoft.Identity.Client;
-using Microsoft.Xrm.Sdk.Query;
 
 using FredrikHr.PowerPlatformSdkExtensions.PluginRuntime;
 using FredrikHr.PowerPlatformSdkExtensions.PluginRuntime.Entities;
@@ -14,44 +12,96 @@ namespace FredrikHr.PowerPlatformCustomDelegation.Common;
 public sealed class MsalPluginUtility
 {
     public const string FallbackClientId = "00000007-0000-0000-c000-000000000000";
-    internal static class InputParameterNames
-    {
-        internal const string Application = nameof(Application);
-        internal const string ApplicationEntity = nameof(ApplicationEntity);
-        internal const string ClientCredentialsSource = nameof(ClientCredentialsSource);
-        internal const string ClientCredentialsSourceEntity = nameof(ClientCredentialsSourceEntity);
-    }
 
     private readonly IServiceProvider _serviceProvider;
     private readonly ParameterCollection _inputs;
+    private readonly string _applicationInputParameterName;
+    private readonly string _credentialsSourceInputParameterName;
+    private readonly string _clientConfigurationInputParameterName;
     private readonly PluginExecutionInformation _executionInformation;
     private readonly AzureUtility _azureUtility;
     private readonly Lazy<bool> _isApplicationSelfRequest;
     private readonly Lazy<bool> _isPluginIdentityRequest;
     private readonly Lazy<ConfidentialClientApplicationOptions?> _msalClientOptions;
-    private readonly Lazy<PluginClientCredentialsSource?> _clientCredentialsSource;
 
     public MsalPluginUtility(
         IServiceProvider serviceProvider,
         PluginExecutionInformation executionInformation,
-        AzureUtility azureUtility)
+        AzureUtility azureUtility,
+        string applicationInputParameterName,
+        string credentialsSourceInputParameterName,
+        string clientConfigurationInputParameterName)
     {
         _serviceProvider = serviceProvider;
         var context = serviceProvider.Get<IPluginExecutionContext>();
-        _inputs = context.InputParameters;
         _executionInformation = executionInformation;
         _azureUtility = azureUtility;
+
+        _inputs = context.InputParameters;
+        _applicationInputParameterName = applicationInputParameterName;
+        _credentialsSourceInputParameterName = credentialsSourceInputParameterName;
+        _clientConfigurationInputParameterName = clientConfigurationInputParameterName;
 
         _isApplicationSelfRequest = new(EvaluateIsApplicationSelfRequest);
         _isPluginIdentityRequest = new(EvaluateIsApplicationPluginIdentityRequest);
         _msalClientOptions = new(ConstructConfidentialClientApplicationOptions);
-        _clientCredentialsSource = new(ConstructClientCredentialsSource);
     }
 
+    private Task<KeyVaultBackedCredentialsSource?> ClientCredentialsSourceTask
+        => field ?? ConstructClientCredentialsSource();
     public bool IsApplicationRequestingSelf => _isApplicationSelfRequest.Value;
     public bool IsRequestedApplicationPluginIdentity => _isPluginIdentityRequest.Value;
     public ConfidentialClientApplicationOptions? MsalClientOptions => _msalClientOptions.Value;
-    public PluginClientCredentialsSource? ClientCredentialsSource => _clientCredentialsSource.Value;
+    public KeyVaultBackedCredentialsSource? ClientCredentialsSource =>
+        ClientCredentialsSourceTask.GetAwaiter().GetResult();
+
+    private void EnsureTranslateClientConfigurationInputParameter()
+    {
+        Entity? credsSourceEntityInput = null;
+        if (_inputs.TryGetValue(
+            _applicationInputParameterName,
+            out Entity? applicationEntityInput
+            ) && applicationEntityInput is not null &&
+            _inputs.TryGetValue(
+            _credentialsSourceInputParameterName,
+            out credsSourceEntityInput
+            ) && credsSourceEntityInput is not null)
+        {
+            return;
+        }
+
+        if (!_inputs.TryGetValue(
+            _clientConfigurationInputParameterName,
+            out EntityReference? configEntityReference
+            ) || configEntityReference is null)
+        {
+            return;
+        }
+        var configEntity = _executionInformation.SystemDataverseClient
+            .GetByEntityReference<msal_confidentialclientconfiguration>(
+                configEntityReference, msal_confidentialclientconfiguration.ColumnSet);
+        if (configEntity is null)
+        {
+            return;
+        }
+
+        if (applicationEntityInput is null &&
+            configEntity.msal_clientinfoid is EntityReference applicationEntityReference)
+        {
+            applicationEntityInput = new Entity(
+                applicationEntityReference.LogicalName,
+                applicationEntityReference.Id);
+            _inputs[_applicationInputParameterName] = applicationEntityInput;
+        }
+        if (credsSourceEntityInput is null &&
+            configEntity.msal_clientcredentialsid is EntityReference credsSourceEntityReference)
+        {
+            credsSourceEntityInput = new Entity(
+                credsSourceEntityReference.LogicalName,
+                credsSourceEntityReference.Id);
+            _inputs[_credentialsSourceInputParameterName] = credsSourceEntityInput;
+        }
+    }
 
     public ConfidentialClientApplicationBuilder CreateMsalClientBuilder()
     {
@@ -59,22 +109,23 @@ public sealed class MsalPluginUtility
             .CreateWithApplicationOptions(MsalClientOptions);
 
         if (_inputs.TryGetValue(
-            InputParameterNames.ApplicationEntity,
+            _applicationInputParameterName,
             out oauth2_clientidreference? oauth2Reference) &&
             oauth2Reference is not null)
         {
-            string? instanceDiscoveryJson = oauth2Reference.msal_instancediscoveryjson;
-            if (string.IsNullOrEmpty(instanceDiscoveryJson) &&
-                oauth2Reference.oidc_authorityurl is string oidcAuthorityUrl)
+            switch (oauth2Reference)
             {
-                instanceDiscoveryJson = $$"""
-                    { "tenant_discovery_endpoint": "{{oidcAuthorityUrl}}/.well-known/openid-configuration" }
-                    """;
+                case { oidc_authorityurl: string oidcAuthority }:
+                    builder = builder.WithOidcAuthority(oidcAuthority);
+                    break;
+                case { msal_instancediscoveryjson: string instanceDiscoveryMetadata }:
+                    builder = builder.WithInstanceDiscoveryMetadata(instanceDiscoveryMetadata);
+                    break;
             }
-            builder = builder.WithInstanceDiscoveryMetadata(instanceDiscoveryJson);
         }
 
-        if (ClientCredentialsSource is PluginClientCredentialsSource credentialsSource)
+        if (string.IsNullOrEmpty(MsalClientOptions?.ClientSecret) &&
+            ClientCredentialsSource is KeyVaultBackedCredentialsSource credentialsSource)
         {
             string? customKeyIdentifier = credentialsSource.CustomKeyIdentifier;
             bool sendX5c = false;
@@ -123,50 +174,10 @@ public sealed class MsalPluginUtility
         Uri idpInstanceUri = idpAuthorityInfo.AzureAuthorityHost;
         string idpInstanceUrl = idpInstanceUri.ToString();
 
+        EnsureTranslateClientConfigurationInputParameter();
+
         if (_inputs.TryGetValue(
-            InputParameterNames.Application,
-            out EntityReference applicationEntityReference))
-        {
-            _inputs[InputParameterNames.ApplicationEntity] = applicationEntityReference.LogicalName switch
-            {
-                string n1 when ManagedIdentity.EntityLogicalName.Equals(n1, cmp)
-                    => GetByEntityReference<ManagedIdentity>(
-                        _executionInformation.SystemDataverseClient,
-                        applicationEntityReference,
-                        ManagedIdentity.ColumnSet
-                        ),
-                string n1 when SystemUser.EntityLogicalName.Equals(n1, cmp)
-                    => GetByEntityReference<SystemUser>(
-                        _executionInformation.SystemDataverseClient,
-                        applicationEntityReference,
-                        SystemUser.ApplicationUserColumnSet
-                        ),
-                string n1 when ApplicationUser.EntityLogicalName.Equals(n1, cmp)
-                    => GetByEntityReference<ApplicationUser>(
-                        _executionInformation.SystemDataverseClient,
-                        applicationEntityReference,
-                        ApplicationUser.ColumnSet
-                        ),
-                string n1 when entra_serviceprincipalreference.EntityLogicalName.Equals(n1, cmp)
-                    => GetByEntityReference<entra_serviceprincipalreference>(
-                        _executionInformation.SystemDataverseClient,
-                        applicationEntityReference,
-                        entra_serviceprincipalreference.ColumnSet
-                        ),
-                string n1 when oauth2_clientidreference.EntityLogicalName.Equals(n1, cmp)
-                    => GetByEntityReference<oauth2_clientidreference>(
-                        _executionInformation.SystemDataverseClient,
-                        applicationEntityReference,
-                        oauth2_clientidreference.ColumnSet
-                        ),
-                _ => throw new InvalidPluginExecutionException(
-                    httpStatus: PluginHttpStatusCode.BadRequest,
-                    message: $"Entity '{applicationEntityReference.LogicalName}' specified for {InputParameterNames.Application}, but only the following entities are allowed: {ManagedIdentity.EntityLogicalName}, {SystemUser.EntityLogicalName}, {ApplicationUser.EntityLogicalName}, {entra_serviceprincipalreference.EntityLogicalName}, {oauth2_clientidreference.EntityLogicalName}"
-                    ),
-            };
-        }
-        if (_inputs.TryGetValue(
-            InputParameterNames.ApplicationEntity,
+            _applicationInputParameterName,
             out Entity? applicationEntityInput) &&
             applicationEntityInput is not null)
         {
@@ -203,6 +214,11 @@ public sealed class MsalPluginUtility
             _executionInformation.ApplicationSystemUser is SystemUser user)
             applicationEntityInput = user;
 
+        EnsureExpandApplicationEntity(
+            _executionInformation.SystemDataverseClient,
+            ref applicationEntityInput);
+        _inputs[_applicationInputParameterName] = applicationEntityInput;
+
         return applicationEntityInput switch
         {
             ManagedIdentity mi => ConstructFromManagedIdentity(mi),
@@ -214,8 +230,7 @@ public sealed class MsalPluginUtility
         };
 
         ConfidentialClientApplicationOptions ConstructFromEntraServicePrincipalReference(
-            entra_serviceprincipalreference entraSpnRef
-            )
+            entra_serviceprincipalreference entraSpnRef)
         {
             ConfidentialClientApplicationOptions opts = new()
             {
@@ -249,8 +264,7 @@ public sealed class MsalPluginUtility
         }
 
         ConfidentialClientApplicationOptions ConstructFromOAuthClientIdReference(
-            oauth2_clientidreference oauth2Ref
-            )
+            oauth2_clientidreference oauth2Ref)
         {
             ConfidentialClientApplicationOptions opts = new()
             {
@@ -261,8 +275,7 @@ public sealed class MsalPluginUtility
         }
 
         ConfidentialClientApplicationOptions ConstructFromManagedIdentity(
-            ManagedIdentity managedIdentity
-            )
+            ManagedIdentity managedIdentity)
         {
             ConfidentialClientApplicationOptions opts = new()
             {
@@ -275,25 +288,39 @@ public sealed class MsalPluginUtility
                 ClientId = managedIdentity.ApplicationId?.ToString(),
                 ClientName = managedIdentity.Name ?? $"{ManagedIdentity.EntitySetName}({managedIdentity.Id})",
             };
-            if (managedIdentity.KeyVaultReferenceId is EntityReference miCreds &&
-                (!_inputs.TryGetValue<EntityReference?>(
-                    InputParameterNames.ClientCredentialsSource,
-                    out var overrideCreds
-                ) || overrideCreds is null))
+            switch (managedIdentity)
             {
-                _inputs[InputParameterNames.ClientCredentialsSource] =
-                    miCreds;
+                case
+                {
+                    CredentialSource: credentialsource.ClientSecret,
+                    ClientSecret: string clientSecretValue,
+                }:
+                    opts.ClientSecret = clientSecretValue;
+                    break;
+                case
+                {
+                    CredentialSource: credentialsource.KeyVault,
+                    KeyVaultReferenceId: EntityReference miCredsReference,
+                }
+                when !_inputs.TryGetValue(
+                    _credentialsSourceInputParameterName,
+                    out Entity? overrideCreds) || overrideCreds is null:
+                    Entity miCredsEntity = new(miCredsReference.LogicalName, miCredsReference.Id);
+                    _inputs[_credentialsSourceInputParameterName] =
+                        miCredsEntity;
+                    break;
             }
             return opts;
         }
 
-        ConfidentialClientApplicationOptions ConstructFromSystemUser(SystemUser applicationUser)
+        ConfidentialClientApplicationOptions ConstructFromSystemUser(
+            SystemUser applicationUser)
         {
             if (applicationUser is not { ApplicationId: Guid appId })
             {
                 throw new InvalidPluginExecutionException(
                     httpStatus: PluginHttpStatusCode.BadRequest,
-                    message: $"Entity '{SystemUser.EntityLogicalName}' specified for {InputParameterNames.Application}, but referenced entity does not represent an application user."
+                    message: $"Entity '{SystemUser.EntityLogicalName}' specified for {_applicationInputParameterName}, but it does not represent an application user."
                     );
             }
             ConfidentialClientApplicationOptions opts = new()
@@ -306,13 +333,14 @@ public sealed class MsalPluginUtility
             return opts;
         }
 
-        ConfidentialClientApplicationOptions ConstructFromApplicationUser(ApplicationUser applicationUser)
+        ConfidentialClientApplicationOptions ConstructFromApplicationUser(
+            ApplicationUser applicationUser)
         {
             if (applicationUser is not { ApplicationId: Guid appId })
             {
                 throw new InvalidPluginExecutionException(
                     httpStatus: PluginHttpStatusCode.BadRequest,
-                    message: $"Entity '{SystemUser.EntityLogicalName}' specified for {InputParameterNames.Application}, but referenced entity does not represent an application user."
+                    message: $"Entity '{SystemUser.EntityLogicalName}' specified for {_applicationInputParameterName}, but its application ID is missing."
                     );
             }
             ConfidentialClientApplicationOptions opts = new()
@@ -323,6 +351,81 @@ public sealed class MsalPluginUtility
                 ClientName = applicationUser.ApplicationName,
             };
             return opts;
+        }
+    }
+
+    private static void EnsureExpandApplicationEntity(
+        IOrganizationService dataverseClient,
+        ref Entity? applicationEntityInput)
+    {
+        switch (applicationEntityInput)
+        {
+            case ManagedIdentity mi
+            when IsManagedIdentityEntityExpandable(mi):
+                applicationEntityInput = RetrieveEntity(dataverseClient, mi, mi.ManagedIdentityId, ManagedIdentity.ColumnSet);
+                break;
+            case SystemUser su
+            when IsSystemUserExandable(su):
+                applicationEntityInput = RetrieveEntity(dataverseClient, su, su.SystemUserId, SystemUser.ApplicationUserColumnSet);
+                break;
+            case ApplicationUser au
+            when IsApplicationUserExandable(au):
+                applicationEntityInput = RetrieveEntity(dataverseClient, au, au.ApplicationUserId, ApplicationUser.ColumnSet);
+                break;
+            case entra_serviceprincipalreference spnRef
+            when IsEntraServicePrincipalReferenceExandable(spnRef):
+                applicationEntityInput = RetrieveEntity(dataverseClient, spnRef, spnRef.entra_serviceprincipalreferenceId, entra_serviceprincipalreference.ColumnSet);
+                break;
+            case oauth2_clientidreference oauth2Ref
+            when IsOauth2ClientIdReferenceExandable(oauth2Ref):
+                applicationEntityInput = RetrieveEntity(dataverseClient, oauth2Ref, oauth2Ref.oauth2_clientidreferenceId, oauth2_clientidreference.ColumnSet);
+                break;
+        }
+
+        static bool IsManagedIdentityEntityExpandable(ManagedIdentity mi)
+        {
+            return mi.ManagedIdentityId.HasValue &&
+                !mi.ApplicationId.HasValue;
+        }
+
+        static bool IsSystemUserExandable(SystemUser su)
+        {
+            return su.SystemUserId.HasValue &&
+                !su.ApplicationId.HasValue;
+        }
+
+        static bool IsApplicationUserExandable(ApplicationUser au)
+        {
+            return au.ApplicationUserId.HasValue &&
+                !au.ApplicationId.HasValue;
+        }
+
+        static bool IsEntraServicePrincipalReferenceExandable(
+            entra_serviceprincipalreference spnRef)
+        {
+            return spnRef.entra_serviceprincipalreferenceId.HasValue &&
+                string.IsNullOrEmpty(spnRef.entra_clientid);
+        }
+
+        static bool IsOauth2ClientIdReferenceExandable(
+            oauth2_clientidreference oauth2Ref)
+        {
+            return oauth2Ref.oauth2_clientidreferenceId.HasValue &&
+                string.IsNullOrEmpty(oauth2Ref.oauth2_clientid);
+        }
+
+        static T RetrieveEntity<T>(
+            IOrganizationService dataverseClient,
+            T entity,
+            Guid? id,
+            Microsoft.Xrm.Sdk.Query.ColumnSet columnSet)
+            where T: Entity
+        {
+            return dataverseClient.Retrieve(entity.LogicalName, id ?? entity.Id, columnSet) switch
+            {
+                T e => e,
+                Entity e => e.ToEntity<T>(),
+            };
         }
     }
 
@@ -376,124 +479,21 @@ public sealed class MsalPluginUtility
         return false;
     }
 
-    private PluginClientCredentialsSource? ConstructClientCredentialsSource()
+    private Task<KeyVaultBackedCredentialsSource?> ConstructClientCredentialsSource()
     {
-        const StringComparison cmp = StringComparison.OrdinalIgnoreCase;
-
         // Force evaluation of MSAL Client Options
         // might set Client Credentials Source inputs during evaluation
         _ = MsalClientOptions;
 
-        if (_inputs.TryGetValue(
-            InputParameterNames.ClientCredentialsSource,
-            out EntityReference credsSourceEntityRef))
-        {
-            _inputs[InputParameterNames.ClientCredentialsSourceEntity] =
-                credsSourceEntityRef.LogicalName switch
-            {
-                string n1 when KeyVaultReference.EntityLogicalName.Equals(n1, cmp)
-                    => GetByEntityReference<KeyVaultReference>(
-                        _executionInformation.SystemDataverseClient,
-                        credsSourceEntityRef,
-                        KeyVaultReference.ColumnSet
-                        ),
-                string n1 when az_keyvaultreference.EntityLogicalName.Equals(n1, cmp)
-                    => GetByEntityReference<az_keyvaultreference>(
-                        _executionInformation.SystemDataverseClient,
-                        credsSourceEntityRef,
-                        az_keyvaultreference.ColumnSet
-                        ),
-                _ => throw new InvalidPluginExecutionException(
-                    httpStatus: PluginHttpStatusCode.BadRequest,
-                    message: $"Entity '{credsSourceEntityRef.LogicalName}' specified for {InputParameterNames.ClientCredentialsSource}, but only the following entities are allowed: {KeyVaultReference.EntityLogicalName}, {az_keyvaultreference.EntityLogicalName}"
-                    ),
-            };
-        }
-        if (_inputs.TryGetValue(
-            InputParameterNames.ClientCredentialsSourceEntity,
-            out Entity? credsSourceEntityInput) &&
-            credsSourceEntityInput is not null)
-        {
-            switch (credsSourceEntityInput.LogicalName)
-            {
-                case string n2
-                when KeyVaultReference.EntityLogicalName.Equals(n2, cmp)
-                && credsSourceEntityInput is not KeyVaultReference:
-                    credsSourceEntityInput = credsSourceEntityInput.ToEntity<KeyVaultReference>();
-                    break;
-                case string n2
-                when az_keyvaultreference.EntityLogicalName.Equals(n2, cmp)
-                && credsSourceEntityInput is not az_keyvaultreference:
-                    credsSourceEntityInput = credsSourceEntityInput.ToEntity<az_keyvaultreference>();
-                    break;
-            }
-        }
-
-        return credsSourceEntityInput switch
-        {
-            KeyVaultReference kvRef => ConstructFromKeyVaultReference(kvRef),
-            az_keyvaultreference kvRef => ConstructFromAzKeyVaultReference(kvRef),
-            _ => null,
-        };
-
-        PluginClientCredentialsSource ConstructFromKeyVaultReference(
-            KeyVaultReference kvRef)
-        {
-            string? kvUrl = kvRef.KeyVaultUri;
-            Uri? kvUri = kvUrl is not null ? new(kvUrl, UriKind.Absolute) : null;
-            PluginClientCredentialsSource source = new()
-            {
-                KeyVaultUri = kvUri,
-                KeyVaultName = kvUri is not null ? AzureUtility.GetKeyVaultNameFromUri(kvUri) : null,
-                KeyVaultObjectType = kvRef.KeyType.GetValueOrDefault(),
-                KeyVaultObjectName = kvRef.KeyName,
-            };
-            return source;
-        }
-
-        PluginClientCredentialsSource ConstructFromAzKeyVaultReference(
-            az_keyvaultreference kvRef)
-        {
-            string? kvUrl = kvRef.az_vaulturi;
-            Uri? kvUri = kvUrl is not null ? new(kvUrl, UriKind.Absolute) : null;
-            string? kvArmId = kvRef.az_resourceid;
-            PluginClientCredentialsSource source = new()
-            {
-                KeyVaultUri = kvUri,
-                KeyVaultName = kvUri is not null ? AzureUtility.GetKeyVaultNameFromUri(kvUri) : null,
-                KeyVaultObjectName = kvRef.az_name,
-                KeyVaultObjectType = kvRef.az_type.GetValueOrDefault() switch
-                {
-                    az_keyvaultdataobjecttype.Secret => keytype.Secret,
-                    az_keyvaultdataobjecttype.Certificate => keytype.Certificate,
-                    az_keyvaultdataobjecttype.CertificatewithX509chain => keytype.CertificateWithX5c,
-                    _ => default,
-                },
-                KeyVaultObjectVersion = kvRef.az_version,
-                KeyVaultObjectResourceIdentifier = kvArmId is not null
-                    ? ResourceIdentifier.Parse(kvArmId)
-                    : null,
-            };
-            if (kvRef.az_vaultobjectiduri is string kvObjIdUrl)
-            {
-                Uri kvObjIdUri = new(kvObjIdUrl, UriKind.Absolute);
-                switch (source.KeyVaultObjectType)
-                {
-                    case keytype.Secret:
-                        source.KeyVaultSecretIdentifier = new(kvObjIdUri);
-                        break;
-                    case keytype.Certificate:
-                    case keytype.CertificateWithX5c:
-                        source.KeyVaultCertificateIdentifier = new(kvObjIdUri);
-                        break;
-                }
-            }
-            return source;
-        }
+        return KeyVaultBackedCredentialsSource.FromParameterCollectionAsync(
+            _inputs,
+            _executionInformation,
+            _azureUtility,
+            _credentialsSourceInputParameterName);
     }
 
     public void EnsureMsalConfidentialClientIsAuthorized(
-        PluginClientCredentialsSource? credentialsSource = null)
+        KeyVaultBackedCredentialsSource? credentialsSource = null)
     {
         var context = _serviceProvider.Get<IPluginExecutionContext2>();
         if (!IsApplicationRequestingSelf &&
@@ -510,17 +510,35 @@ public sealed class MsalPluginUtility
             return;
         }
 
+        EnsureMsalClientOptionsAvailable();
+
+        EnsureCredentialSourceIsAuthorized(credentialsSource);
+    }
+
+    public void EnsureMsalClientOptionsAvailable()
+    {
         if (MsalClientOptions is null)
         {
             throw new InvalidPluginExecutionException(
                 httpStatus: PluginHttpStatusCode.BadRequest,
-                message: $"Missing required input parameters specifying the application for which an access token should be acquired."
+                message: $"Missing required input parameters specifying the requested application identity."
                 );
         }
+    }
 
-        credentialsSource ??= ClientCredentialsSource;
-        credentialsSource?.FillMissingPropertiesAsync(_azureUtility)
-            .GetAwaiter().GetResult();
+    public void EnsureCredentialSourceIsAuthorized(
+        KeyVaultBackedCredentialsSource? credentialsSource = null)
+    {
+        var context = _serviceProvider.Get<IPluginExecutionContext2>();
+        if (credentialsSource is null)
+        {
+            credentialsSource = ClientCredentialsSource;
+        }
+        else
+        {
+            credentialsSource.FillMissingPropertiesAsync(_azureUtility)
+                .GetAwaiter().GetResult();
+        }
         if (credentialsSource is not { KeyVaultObjectResourceIdentifier: ResourceIdentifier kvObjArmId })
         {
             throw new InvalidPluginExecutionException(
@@ -554,19 +572,5 @@ public sealed class MsalPluginUtility
                     message: $"User (Entra ID Object ID: {context.UserAzureActiveDirectoryObjectId}, Dataverse System User ID: {context.UserId}) does not have required role assignment to use the specified Key Vault Certificate as a credential for application authentication. User is not authorized either for the Get Certificate Properties og Sign action on the specified certificate."
                     );
         }
-    }
-
-    private static T? GetByEntityReference<T>(
-        IOrganizationService dataverseClient,
-        EntityReference r,
-        ColumnSet columnSet
-        ) where T : Entity
-    {
-        return dataverseClient.Retrieve(r.LogicalName, r.Id, columnSet) switch
-        {
-            T t => t,
-            Entity e => e.ToEntity<T>(),
-            _ => null,
-        };
     }
 }

@@ -4,15 +4,12 @@
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
   </PropertyGroup>
   <ItemGroup>
-    <GlobalPackageReference Include="Microsoft.SourceLink.GitHub">
-      <Version>10.0.401</Version>
-    </GlobalPackageReference>
     <GlobalPackageReference Include="PolySharp">
-      <Version>1.16.0</Version>
+      <Version>1.17.1</Version>
     </GlobalPackageReference>
     <GlobalPackageReference Include="FredrikHr.NupkgMSBuild.GitHubPackageProjectUrlInference">
       <ProjectReference>$(MSBuildThisFileDirectory).submodules\fredrikhr\powerplatform-sdk-extensions\.submodules\fredrikhr\nuget-msbuild-extensions\build\FredrikHr.NupkgMSBuild.GitHubPackageProjectUrlInference\FredrikHr.NupkgMSBuild.GitHubPackageProjectUrlInference.csproj</ProjectReference>
-      <Version>1.0.1</Version>
+      <Version>1.0.3</Version>
     </GlobalPackageReference>
   </ItemGroup>
   <ItemGroup Label="FredrikHr.NupkgMSBuild.*">
@@ -35,9 +32,8 @@
         FredrikHr.PowerPlatformSdkExtensions.MSBuild.PluginPackage;
         FredrikHr.PowerPlatformSdkExtensions.MSBuild.Solution;
         "
-    >
-      <Version>2.12.2</Version>
-    </PackageVersion>
+      Version="2.15.1"
+    />
   </ItemGroup>
   <ItemGroup>
     <PackageVersion Include="Microsoft.CrmSdk.CoreAssemblies">
@@ -105,6 +101,9 @@
     </PackageVersion>
     <PackageVersion Include="System.Diagnostics.DiagnosticSource">
       <Version>7.0.2</Version>
+    </PackageVersion>
+    <PackageVersion Include="Microsoft.Bcl.Cryptography">
+      <Version>10.0.2</Version>
     </PackageVersion>
   </ItemGroup>
 </Project>

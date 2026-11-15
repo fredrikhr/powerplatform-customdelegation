@@ -1,6 +1,5 @@
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
-using System.Text;
 
 using Microsoft.Identity.Client;
 using Microsoft.IdentityModel.JsonWebTokens;
@@ -18,52 +17,67 @@ namespace FredrikHr.PowerPlatformCustomDelegation.Common;
 public static class KeyVaultPluginUtility
 {
     public const string KeyIdUseKeyVaultId = "<use-keyvault-id>";
-    private static readonly UTF8Encoding Utf8Encoding =
-        new(encoderShouldEmitUTF8Identifier: false);
-
-    [System.Diagnostics.CodeAnalysis.SuppressMessage(
-        "Security",
-        "CA5379: Ensure Key Derivation Function algorithm is sufficiently strong",
-        Justification = ".NET Framework"
-        )]
-    public static SymmetricSecurityKey GetKeyVaultSecretSecurityKey(
-        KeyVaultSecret keyVaultSecret,
-        int keySizeBits
-        )
-    {
-        _ = keyVaultSecret ?? throw new ArgumentNullException(nameof(keyVaultSecret));
-        string keyVaultSecretId = keyVaultSecret.Id.ToString();
-        byte[] keyDerivationSalt = Utf8Encoding.GetBytes(keyVaultSecretId);
-        const int bitsPerByte = 8;
-        using Rfc2898DeriveBytes keyDerivationAlg = new(
-            password: keyVaultSecret.Value,
-            salt: keyDerivationSalt,
-            iterations: 100_000
-            );
-        byte[] keyBytes = keyDerivationAlg.GetBytes(keySizeBits / bitsPerByte);
-        SymmetricSecurityKey jweKey = new(keyBytes) { KeyId = keyVaultSecretId };
-        return jweKey;
-    }
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
         "Reliability",
         "CA2000: Dispose objects before losing scope",
-        Justification = nameof(X509SecurityKey)
-        )]
+        Justification = nameof(X509SecurityKey))]
     public static X509SecurityKey GetKeyVaultPublicX509SecurityKey(
-        KeyVaultCertificate keyVaultCertificate
-        )
+        KeyVaultCertificate keyVaultCertificate)
     {
         _ = keyVaultCertificate ?? throw new ArgumentNullException(nameof(keyVaultCertificate));
         X509Certificate2 x509Certificate = new(keyVaultCertificate.Cer);
         return new(x509Certificate, keyVaultCertificate.Id.ToString());
     }
 
+    public static RsaSecurityKey GetKeyVaultPublicRsaSecurityKey(
+        KeyVaultCertificate keyVaultCertificate)
+    {
+        _ = keyVaultCertificate ?? throw new ArgumentNullException(nameof(keyVaultCertificate));
+        using X509Certificate2 x509Certificate = new(keyVaultCertificate.Cer);
+        return new(x509Certificate.GetRSAPublicKey())
+        {
+            KeyId = keyVaultCertificate.KeyId.ToString(),
+        };
+    }
+
+    public static Task<X509SecurityKey> GetKeyVaultPrivateX509SecurityKeyAsync(
+        TokenCredential tokenCredential,
+        Uri keyVaultCertificateUri)
+    {
+        return GetKeyVaultPrivateX509SecurityKeyAsync(
+            tokenCredential,
+            new KeyVaultCertificateIdentifier(keyVaultCertificateUri));
+    }
+
+    public static async Task<X509SecurityKey> GetKeyVaultPrivateX509SecurityKeyAsync(
+        TokenCredential tokenCredential,
+        KeyVaultCertificateIdentifier keyVaultCertificateIdentifier)
+    {
+        if (string.IsNullOrEmpty(keyVaultCertificateIdentifier.Version))
+        {
+            KeyVaultCertificate kvCertInfo = await GetKeyVaultCertificateAsync(
+                tokenCredential,
+                keyVaultCertificateIdentifier)
+                .ConfigureAwait(continueOnCapturedContext: false);
+            keyVaultCertificateIdentifier = new(kvCertInfo.Id);
+        }
+        CertificateClient kvCertClient = new(
+            keyVaultCertificateIdentifier.VaultUri,
+            tokenCredential);
+        X509Certificate2 kvCertData = await kvCertClient.DownloadCertificateAsync(
+            keyVaultCertificateIdentifier.Name,
+            keyVaultCertificateIdentifier.Version
+            ).ConfigureAwait(continueOnCapturedContext: false);
+        return new X509SecurityKey(
+            kvCertData,
+            keyVaultCertificateIdentifier.SourceId.ToString());
+    }
+
     public static async Task<(KeyVaultCertificate certInfo, RsaSecurityKey rsaKey)> GetKeyVaultPrivateRsaSecurityKeyAsync(
         TokenCredential tokenCredential,
         KeyVaultCertificateIdentifier keyVaultCertificateId,
-        string? keyId = null
-        )
+        string? keyId = null)
     {
         KeyVaultCertificate keyVaultCertificateInfo = await GetKeyVaultCertificateAsync(
             tokenCredential,
@@ -75,26 +89,21 @@ public static class KeyVaultPluginUtility
         return (keyVaultCertificateInfo, keyVaultRsaKey);
     }
 
-    public static async Task<(KeyVaultCertificate certInfo, RsaSecurityKey rsaKey)> GetKeyVaultPrivateRsaSecurityKeyAsync(
+    public static Task<(KeyVaultCertificate certInfo, RsaSecurityKey rsaKey)> GetKeyVaultPrivateRsaSecurityKeyAsync(
         TokenCredential tokenCredential,
         Uri keyVaultCertificateUri,
-        string? keyId = null
-        )
+        string? keyId = null)
     {
-        KeyVaultCertificate keyVaultCertificateInfo = await GetKeyVaultCertificateAsync(
-            tokenCredential, new(keyVaultCertificateUri)
-            ).ConfigureAwait(continueOnCapturedContext: false);
-        RsaSecurityKey keyVaultRsaKey = await GetKeyVaultPrivateRsaSecurityKeyAsync(
-            tokenCredential, keyVaultCertificateInfo, keyId
-            ).ConfigureAwait(continueOnCapturedContext: false);
-        return (keyVaultCertificateInfo, keyVaultRsaKey);
+        return GetKeyVaultPrivateRsaSecurityKeyAsync(
+            tokenCredential,
+            new KeyVaultCertificateIdentifier(keyVaultCertificateUri),
+            keyId);
     }
 
     public static async Task<RsaSecurityKey> GetKeyVaultPrivateRsaSecurityKeyAsync(
         TokenCredential tokenCredential,
         KeyVaultCertificate keyVaultCertificateInfo,
-        string? keyId = null
-        )
+        string? keyId = null)
     {
         _ = keyVaultCertificateInfo ?? throw new ArgumentNullException(nameof(keyVaultCertificateInfo));
         CryptographyClientOptions keyVaultCryptoClientOptions = new();
@@ -121,8 +130,7 @@ public static class KeyVaultPluginUtility
         KeyVaultCertificateIdentifier keyVaultCertificateId,
         string? keyId = null,
         string? assertionJwtAlgorithm = null,
-        bool sendX5c = false
-        )
+        bool sendX5c = false)
     {
         Task<(KeyVaultCertificate info, SigningCredentials signCreds, string assertionHeaderEncoded)> keyVaultCertificateStaticTask =
             GetClientAssertionStaticData(
@@ -162,16 +170,14 @@ public static class KeyVaultPluginUtility
         [System.Diagnostics.CodeAnalysis.SuppressMessage(
             "Security",
             "CA5350: Do Not Use Weak Cryptographic Algorithms",
-            Justification = nameof(X509Certificate2)
-            )]
+            Justification = nameof(X509Certificate2))]
         static async Task<(KeyVaultCertificate info, SigningCredentials signCreds, string assertionHeaderEncoded)>
         GetClientAssertionStaticData(
             TokenCredential tokenCredential,
             KeyVaultCertificateIdentifier keyVaultCertificateId,
             string? kidJwtHeaderClaim = null,
             string? assertionJwtAlgorithm = null,
-            bool sendX5c = false
-            )
+            bool sendX5c = false)
         {
             KeyVaultCertificate keyVaultCertificateInfo = await GetKeyVaultCertificateAsync(
                 tokenCredential,
@@ -215,13 +221,11 @@ public static class KeyVaultPluginUtility
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
         "Security",
         "CA5350: Do Not Use Weak Cryptographic Algorithms",
-        Justification = nameof(X509Certificate2)
-        )]
+        Justification = nameof(X509Certificate2))]
     public static Func<AssertionRequestOptions, Task<string>> GetKeyVaultCertificateAssertionProvider(
         KeyVaultCertificate keyVaultCertificateInfo,
         RsaSecurityKey keyVaultRsaKey,
-        bool sendX5c = false
-        )
+        bool sendX5c = false)
     {
         _ = keyVaultCertificateInfo ?? throw new ArgumentNullException(nameof(keyVaultCertificateInfo));
         using var sha1 = SHA1.Create();
@@ -274,8 +278,7 @@ public static class KeyVaultPluginUtility
 
     public static async Task<KeyVaultCertificate> GetKeyVaultCertificateAsync(
         TokenCredential tokenCredential,
-        KeyVaultCertificateIdentifier keyVaultCertificateId
-        )
+        KeyVaultCertificateIdentifier keyVaultCertificateId)
     {
         CertificateClient keyVaultClient = new(
             keyVaultCertificateId.VaultUri,
@@ -284,27 +287,24 @@ public static class KeyVaultPluginUtility
         return keyVaultCertificateId is { Version: string certVersion }
             ? await keyVaultClient.GetCertificateVersionAsync(
                 keyVaultCertificateId.Name,
-                certVersion
-                ).ConfigureAwait(continueOnCapturedContext: false)
+                certVersion)
+                .ConfigureAwait(continueOnCapturedContext: false)
             : await keyVaultClient.GetCertificateAsync(
-                keyVaultCertificateId.Name
-                ).ConfigureAwait(continueOnCapturedContext: false)
-                ;
+                keyVaultCertificateId.Name)
+                .ConfigureAwait(continueOnCapturedContext: false);
     }
 
     public static async Task<KeyVaultSecret> GetKeyVaultSecretAsync(
         TokenCredential tokenCredential,
-        KeyVaultSecretIdentifier keyVaultSecretId
-        )
+        KeyVaultSecretIdentifier keyVaultSecretId)
     {
         SecretClient keyVaultClient = new(
             keyVaultSecretId.VaultUri,
-            tokenCredential
-            );
+            tokenCredential);
         return await keyVaultClient.GetSecretAsync(
             keyVaultSecretId.Name,
-            keyVaultSecretId.Version
-            ).ConfigureAwait(continueOnCapturedContext: false);
+            keyVaultSecretId.Version)
+            .ConfigureAwait(continueOnCapturedContext: false);
     }
 
     public static KeyVaultSecretIdentifier GetKeyVaultSecretIdentifier(

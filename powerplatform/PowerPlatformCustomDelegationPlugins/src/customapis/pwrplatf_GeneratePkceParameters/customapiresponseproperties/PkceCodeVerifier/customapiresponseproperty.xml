@@ -1,0 +1,13 @@
+<customapiresponseproperty uniquename="PkceCodeVerifier">
+  <description default="Cryptographically securely randomly generated PKCE Code Verifier">
+    <label description="Cryptographically securely randomly generated PKCE Code Verifier" languagecode="1033" />
+    <label description="Cryptographically securely randomly generated PKCE Code Verifier" languagecode="1044" />
+  </description>
+  <displayname default="PKCE Code Verifier">
+    <label description="PKCE Code Verifier" languagecode="1033" />
+    <label description="PKCE Code Verifier" languagecode="1044" />
+  </displayname>
+  <iscustomizable>1</iscustomizable>
+  <name>PkceCodeVerifier</name>
+  <type>10</type>
+</customapiresponseproperty>

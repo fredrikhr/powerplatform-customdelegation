@@ -405,6 +405,174 @@
       },
       "problemMatcher": []
     },
+    // powerplatform/PowerPlatformCustomDelegationPlugins
+    {
+      "label": "PowerPlatformCustomDelegationPlugins | Package Solution (Unmanaged)",
+      "type": "process",
+      "command": "dotnet",
+      "args": [
+        "build",
+        "powerplatform/PowerPlatformCustomDelegationPlugins",
+        "--configuration:Debug",
+        "--property:GenerateFullPaths=true",
+        "--consoleloggerparameters:NoSummary"
+      ],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "dedicated",
+        "showReuseMessage": true,
+        "clear": true
+      },
+      "problemMatcher": [
+        "$msCompile"
+      ]
+    },
+    {
+      "label": "PowerPlatformCustomDelegationPlugins | Push to Power Platform (Unmanaged)",
+      "dependsOn": [
+        "PowerPlatformCustomDelegationPlugins | Package Solution (Unmanaged)"
+      ],
+      "type": "process",
+      "command": "dotnet",
+      "args": [
+        "tool",
+        "run",
+        "pac",
+        "--",
+        "solution",
+        "import",
+        "--async",
+        "--force-overwrite",
+        "--path",
+        "bin/PowerPlatformCustomDelegationPlugins/Debug/PowerPlatformCustomDelegationPlugins.zip"
+      ],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "dedicated",
+        "showReuseMessage": true,
+        "clear": true
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "PowerPlatformCustomDelegationPlugins | Pull from Power Platform (Unmanaged)",
+      "type": "process",
+      "command": "dotnet",
+      "args": [
+        "tool",
+        "run",
+        "pac",
+        "--",
+        "solution",
+        "sync",
+        "--async",
+        "--packagetype",
+        "Unmanaged",
+        "--solution-folder",
+        "powerplatform/PowerPlatformCustomDelegationPlugins/src"
+      ],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "dedicated",
+        "showReuseMessage": true,
+        "clear": true
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "PowerPlatformCustomDelegationPlugins | Package Solution (Managed)",
+      "type": "process",
+      "command": "dotnet",
+      "args": [
+        "build",
+        "powerplatform/PowerPlatformCustomDelegationPlugins",
+        "--configuration:Release",
+        "--property:GenerateFullPaths=true",
+        "--consoleloggerparameters:NoSummary"
+      ],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "dedicated",
+        "showReuseMessage": true,
+        "clear": true
+      },
+      "problemMatcher": [
+        "$msCompile"
+      ]
+    },
+    {
+      "label": "PowerPlatformCustomDelegationPlugins | Push to Power Platform (Managed)",
+      "dependsOn": [
+        "PowerPlatformCustomDelegationPlugins | Package Solution (Managed)"
+      ],
+      "type": "process",
+      "command": "dotnet",
+      "args": [
+        "tool",
+        "run",
+        "pac",
+        "--",
+        "solution",
+        "import",
+        "--async",
+        "--force-overwrite",
+        "--path",
+        "bin/PowerPlatformCustomDelegationPlugins/Release/PowerPlatformCustomDelegationPlugins.zip"
+      ],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "dedicated",
+        "showReuseMessage": true,
+        "clear": true
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "PowerPlatformCustomDelegationPlugins | Upgrade to Power Platform (Managed)",
+      "dependsOn": [
+        "PowerPlatformCustomDelegationPlugins | Push to Power Platform (Managed)"
+      ],
+      "type": "process",
+      "command": "dotnet",
+      "args": [
+        "tool",
+        "run",
+        "pac",
+        "--",
+        "solution",
+        "import",
+        "--async",
+        "--force-overwrite",
+        "--stage-and-upgrade",
+        "--path",
+        "bin/PowerPlatformCustomDelegationPlugins/Release/PowerPlatformCustomDelegationPlugins.zip"
+      ],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "dedicated",
+        "showReuseMessage": true,
+        "clear": true
+      },
+      "problemMatcher": []
+    },
 
     // powerplatform-test/PowerPlatformCustomDelegationTest
     {

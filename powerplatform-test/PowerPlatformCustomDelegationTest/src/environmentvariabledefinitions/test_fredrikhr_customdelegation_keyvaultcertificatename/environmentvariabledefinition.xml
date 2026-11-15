@@ -1,0 +1,15 @@
+<environmentvariabledefinition schemaname="test_fredrikhr_customdelegation_keyvaultcertificatename">
+  <description default="Object Name of a Key Vault Certificate for Service Principal Access Token Acquisition">
+    <label description="Object Name of a Key Vault Certificate for Service Principal Access Token Acquisition" languagecode="1033" />
+    <label description="Object Name of a Key Vault Certificate for Service Principal Access Token Acquisition" languagecode="1044" />
+  </description>
+  <displayname default="TEST | Power Platform Custom Delegation | Key Vault Certificate Name">
+    <label description="TEST | Power Platform Custom Delegation | Key Vault Certificate Name" languagecode="1033" />
+    <label description="TEST | Power Platform Custom Delegation | Key Vault Certificate Name" languagecode="1044" />
+  </displayname>
+  <introducedversion>0.0.0</introducedversion>
+  <iscustomizable>1</iscustomizable>
+  <isrequired>0</isrequired>
+  <secretstore>0</secretstore>
+  <type>100000000</type>
+</environmentvariabledefinition>

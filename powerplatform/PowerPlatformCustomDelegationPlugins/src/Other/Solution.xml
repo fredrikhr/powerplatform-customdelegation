@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ImportExportXml version="9.2.26111.138" SolutionPackageVersion="9.2" languagecode="1033" generatedBy="CrmLive" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" OrganizationVersion="9.2.26111.138" OrganizationSchemaType="Standard" CRMServerServiceabilityVersion="9.2.26111.00138">
+  <SolutionManifest>
+    <UniqueName>PowerPlatformCustomDelegationPlugins</UniqueName>
+    <LocalizedNames>
+      <LocalizedName description="Power Platform Custom Delegation Plugins" languagecode="1033" />
+      <LocalizedName description="Power Platform egendefinert delegering plug-ins" languagecode="1044" />
+    </LocalizedNames>
+    <Descriptions />
+    <Version>3.0.0</Version>
+    <Managed>0</Managed>
+    <Publisher>
+      <UniqueName>fredrikhr</UniqueName>
+      <LocalizedNames>
+        <LocalizedName description="Fredrik Høisæther Rasch" languagecode="1033" />
+        <LocalizedName description="Fredrik Høisæther Rasch" languagecode="1044" />
+      </LocalizedNames>
+      <Descriptions />
+      <EMailAddress>fredrik.rasch@gmail.com</EMailAddress>
+      <SupportingWebsiteUrl>https://github.com/fredrikhr</SupportingWebsiteUrl>
+      <CustomizationPrefix>frh</CustomizationPrefix>
+      <CustomizationOptionValuePrefix>79884</CustomizationOptionValuePrefix>
+      <Addresses />
+    </Publisher>
+    <RootComponents />
+    <MissingDependencies>
+      <MissingDependency>
+        <Required type="ManagedIdentity" solution="PowerPlatformCustomDelegationBase (1.0.0)" id="{1304a7e4-ed28-f011-8c4d-7c1e5226ec1f}" />
+        <Dependent type="PluginPackage" displayName="pwrplatf_CustomDelegationPlugins" id.uniquename="pwrplatf_CustomDelegationPlugins" />
+      </MissingDependency>
+    </MissingDependencies>
+  </SolutionManifest>
+</ImportExportXml>

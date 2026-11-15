@@ -42,6 +42,13 @@
             "description": "Object Name of a Key Vault Secret containing the Client secret for Service Principal Access Token Acquisition"
           }
         },
+        "TEST | Power Platform Custom Delegation | Key Vault Certificate Name (test_fredrikhr_customdelegation_keyvaultcertificatename)": {
+          "defaultValue": "Fredriksperiment-ClientCertificate",
+          "type": "String",
+          "metadata": {
+            "schemaName": "test_fredrikhr_customdelegation_keyvaultcertificatename"
+          }
+        },
         "TEST | Power Platform Custom Delegation | Key Vault URI (test_fredrikhr_customdelegation_keyvaulturi)": {
           "defaultValue": "https://frh-01.vault.azure.net/",
           "type": "String",
@@ -53,9 +60,6 @@
       },
       "triggers": {
         "manual": {
-          "metadata": {
-            "operationMetadataId": "de0f55c8-5f53-441f-a660-9f06d6bc27e7"
-          },
           "type": "Request",
           "kind": "Button",
           "inputs": {
@@ -70,9 +74,6 @@
       "actions": {
         "Power_Automate_Authorization_Grant_(Secret)": {
           "runAfter": {},
-          "metadata": {
-            "operationMetadataId": "a77dd7bc-a83e-42b1-9ff9-629b9faca017"
-          },
           "type": "OpenApiConnection",
           "inputs": {
             "host": {
@@ -82,11 +83,11 @@
             },
             "parameters": {
               "actionName": "pwrplatf_AcquireAccessTokenForApplication",
-              "item/ApplicationEntity": {
+              "item/Application": {
                 "@@odata.type": "Microsoft.Dynamics.CRM.managedidentity",
                 "applicationid": "@parameters('TEST | Power Platform Custom Delegation | App ID (test_fredrikhr_customdelegation_appid)')"
               },
-              "item/ClientCredentialsSourceEntity": {
+              "item/ClientCredentialsSource": {
                 "@@odata.type": "Microsoft.Dynamics.CRM.keyvaultreference",
                 "keytype": 0,
                 "keyvaulturi": "@parameters('TEST | Power Platform Custom Delegation | Key Vault URI (test_fredrikhr_customdelegation_keyvaulturi)')",
@@ -115,9 +116,6 @@
               "Succeeded"
             ]
           },
-          "metadata": {
-            "operationMetadataId": "c504e3f2-ac70-45f8-a9e4-004b9bf04fd4"
-          },
           "type": "Compose",
           "inputs": "Bearer @{body('Power_Automate_Authorization_Grant_(Secret)')['AccessToken']}"
         },
@@ -126,9 +124,6 @@
             "Power_Automate_Authorization_Header_(Secret)": [
               "Succeeded"
             ]
-          },
-          "metadata": {
-            "operationMetadataId": "128194fc-e9f5-43bc-8f31-8683c80d9a3e"
           },
           "type": "Http",
           "inputs": {
@@ -149,9 +144,6 @@
               "Succeeded"
             ]
           },
-          "metadata": {
-            "operationMetadataId": "297a8139-4833-4f29-b07c-a26c6b9b940e"
-          },
           "type": "OpenApiConnection",
           "inputs": {
             "host": {
@@ -161,11 +153,11 @@
             },
             "parameters": {
               "actionName": "pwrplatf_AcquireAccessTokenForApplication",
-              "item/ApplicationEntity": {
+              "item/Application": {
                 "@@odata.type": "Microsoft.Dynamics.CRM.managedidentity",
                 "applicationid": "@parameters('TEST | Power Platform Custom Delegation | App ID (test_fredrikhr_customdelegation_appid)')"
               },
-              "item/ClientCredentialsSourceEntity": {
+              "item/ClientCredentialsSource": {
                 "@@odata.type": "Microsoft.Dynamics.CRM.keyvaultreference",
                 "keytype": 0,
                 "keyvaulturi": "@parameters('TEST | Power Platform Custom Delegation | Key Vault URI (test_fredrikhr_customdelegation_keyvaulturi)')",
@@ -194,9 +186,6 @@
               "Succeeded"
             ]
           },
-          "metadata": {
-            "operationMetadataId": "58a611bf-5840-474b-957e-b1ca3a8d2d38"
-          },
           "type": "Compose",
           "inputs": "Bearer @{body('Dataverse_Authorization_Grant_(Secret)')['AccessToken']}"
         },
@@ -205,9 +194,6 @@
             "Dataverse_Authorization_Header_(Secret)": [
               "Succeeded"
             ]
-          },
-          "metadata": {
-            "operationMetadataId": "0a911e16-f6b7-4c6e-a35c-21c62fc41ae1"
           },
           "type": "Http",
           "inputs": {
@@ -221,7 +207,7 @@
               "Prefer": "odata.include-annotations=*"
             },
             "body": {
-              "ClientCredentialsSourceEntity": {
+              "ClientCredentialsSource": {
                 "@@type": "Microsoft.Dynamics.CRM.keyvaultreference",
                 "keytype": 0,
                 "keyvaulturi": "@parameters('TEST | Power Platform Custom Delegation | Key Vault URI (test_fredrikhr_customdelegation_keyvaulturi)')",
@@ -234,6 +220,164 @@
             "authentication": {
               "type": "Raw",
               "value": "@outputs('Dataverse_Authorization_Header_(Secret)')"
+            }
+          },
+          "runtimeConfiguration": {
+            "secureData": {
+              "properties": [
+                "outputs"
+              ]
+            }
+          }
+        },
+        "Power_Automate_Authorization_Grant_(Certificate)": {
+          "runAfter": {},
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "dataverse",
+              "operationId": "PerformUnboundAction",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "actionName": "pwrplatf_AcquireAccessTokenForApplication",
+              "item/Application": {
+                "@@odata.type": "Microsoft.Dynamics.CRM.managedidentity",
+                "applicationid": "@parameters('TEST | Power Platform Custom Delegation | App ID (test_fredrikhr_customdelegation_appid)')"
+              },
+              "item/ClientCredentialsSource": {
+                "@@odata.type": "Microsoft.Dynamics.CRM.keyvaultreference",
+                "keytype": 1,
+                "keyvaulturi": "@parameters('TEST | Power Platform Custom Delegation | Key Vault URI (test_fredrikhr_customdelegation_keyvaulturi)')",
+                "keyname": "@parameters('TEST | Power Platform Custom Delegation | Key Vault Certificate Name (test_fredrikhr_customdelegation_keyvaultcertificatename)')"
+              },
+              "item/Scopes": [
+                "https://service.flow.microsoft.com/.default"
+              ]
+            },
+            "authentication": {
+              "type": "Raw",
+              "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+            }
+          },
+          "runtimeConfiguration": {
+            "secureData": {
+              "properties": [
+                "outputs"
+              ]
+            }
+          }
+        },
+        "Power_Automate_Authorization_Header_(Certificate)": {
+          "runAfter": {
+            "Power_Automate_Authorization_Grant_(Certificate)": [
+              "Succeeded"
+            ]
+          },
+          "type": "Compose",
+          "inputs": "Bearer @{body('Power_Automate_Authorization_Grant_(Certificate)')['AccessToken']}"
+        },
+        "Power_Automate_Environment_Details_(Certificate)": {
+          "runAfter": {
+            "Power_Automate_Authorization_Header_(Certificate)": [
+              "Succeeded"
+            ]
+          },
+          "type": "Http",
+          "inputs": {
+            "method": "GET",
+            "uri": "https://api.flow.microsoft.com/providers/microsoft.Flow/environments/@{workflow()['tags']['environmentName']}",
+            "queries": {
+              "api-version": "2026-01-01"
+            },
+            "authentication": {
+              "type": "Raw",
+              "value": "@outputs('Power_Automate_Authorization_Header_(Certificate)')"
+            }
+          }
+        },
+        "Dataverse_Authorization_Grant_(Certificate)": {
+          "runAfter": {
+            "Power_Automate_Environment_Details_(Certificate)": [
+              "Succeeded"
+            ]
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "dataverse",
+              "operationId": "PerformUnboundAction",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "actionName": "pwrplatf_AcquireAccessTokenForApplication",
+              "item/Application": {
+                "@@odata.type": "Microsoft.Dynamics.CRM.managedidentity",
+                "applicationid": "@parameters('TEST | Power Platform Custom Delegation | App ID (test_fredrikhr_customdelegation_appid)')"
+              },
+              "item/ClientCredentialsSource": {
+                "@@odata.type": "Microsoft.Dynamics.CRM.keyvaultreference",
+                "keytype": 1,
+                "keyvaulturi": "@parameters('TEST | Power Platform Custom Delegation | Key Vault URI (test_fredrikhr_customdelegation_keyvaulturi)')",
+                "keyname": "@parameters('TEST | Power Platform Custom Delegation | Key Vault Certificate Name (test_fredrikhr_customdelegation_keyvaultcertificatename)')"
+              },
+              "item/Scopes": [
+                "https://@{uriHost(body('Power_Automate_Environment_Details_(Certificate)')['properties']['linkedEnvironmentMetadata']['instanceUrl'])}/.default"
+              ]
+            },
+            "authentication": {
+              "type": "Raw",
+              "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+            }
+          },
+          "runtimeConfiguration": {
+            "secureData": {
+              "properties": [
+                "outputs"
+              ]
+            }
+          }
+        },
+        "Dataverse_Authorization_Header_(Certificate)": {
+          "runAfter": {
+            "Dataverse_Authorization_Grant_(Certificate)": [
+              "Succeeded"
+            ]
+          },
+          "type": "Compose",
+          "inputs": "Bearer @{body('Dataverse_Authorization_Grant_(Certificate)')['AccessToken']}"
+        },
+        "Dataverse_Authorization_Grant_(Certificate,_App-Self)": {
+          "runAfter": {
+            "Dataverse_Authorization_Header_(Certificate)": [
+              "Succeeded"
+            ]
+          },
+          "type": "Http",
+          "inputs": {
+            "method": "POST",
+            "uri": "@{body('Power_Automate_Environment_Details_(Certificate)')['properties']['linkedEnvironmentMetadata']['instanceApiUrl']}/api/data/v@{body('Power_Automate_Environment_Details_(Certificate)')['properties']['linkedEnvironmentMetadata']['version']}/pwrplatf_AcquireAccessTokenForApplication",
+            "headers": {
+              "Accept": "application/json",
+              "OData-Version": "4.01",
+              "OData-MaxVersion": "4.01",
+              "Content-Type": "application/json; charset=utf-8",
+              "Prefer": "odata.include-annotations=*"
+            },
+            "body": {
+              "ClientCredentialsSource": {
+                "@@type": "Microsoft.Dynamics.CRM.keyvaultreference",
+                "keytype": 1,
+                "keyvaulturi": "@parameters('TEST | Power Platform Custom Delegation | Key Vault URI (test_fredrikhr_customdelegation_keyvaulturi)')",
+                "keyname": "@parameters('TEST | Power Platform Custom Delegation | Key Vault Certificate Name (test_fredrikhr_customdelegation_keyvaultcertificatename)')"
+              },
+              "Scopes": [
+                "https://@{uriHost(body('Power_Automate_Environment_Details_(Certificate)')['properties']['linkedEnvironmentMetadata']['instanceUrl'])}/.default"
+              ]
+            },
+            "authentication": {
+              "type": "Raw",
+              "value": "@outputs('Dataverse_Authorization_Header_(Certificate)')"
             }
           },
           "runtimeConfiguration": {

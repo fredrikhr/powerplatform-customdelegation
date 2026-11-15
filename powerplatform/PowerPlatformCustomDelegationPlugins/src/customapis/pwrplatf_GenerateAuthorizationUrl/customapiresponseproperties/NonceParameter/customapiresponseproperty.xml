@@ -1,0 +1,13 @@
+<customapiresponseproperty uniquename="NonceParameter">
+  <description default="Random value used as nonce to prevent replay attacks during authorization.">
+    <label description="Random value used as nonce to prevent replay attacks during authorization." languagecode="1033" />
+    <label description="Random value used as nonce to prevent replay attacks during authorization." languagecode="1044" />
+  </description>
+  <displayname default="Nonce">
+    <label description="Nonce" languagecode="1033" />
+    <label description="Nonce" languagecode="1044" />
+  </displayname>
+  <iscustomizable>1</iscustomizable>
+  <name>NonceParameter</name>
+  <type>10</type>
+</customapiresponseproperty>

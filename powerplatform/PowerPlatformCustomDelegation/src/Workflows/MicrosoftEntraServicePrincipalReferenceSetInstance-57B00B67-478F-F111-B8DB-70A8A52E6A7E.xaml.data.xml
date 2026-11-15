@@ -24,8 +24,10 @@
   <PrimaryEntity>entra_serviceprincipalreference</PrimaryEntity>
   <LocalizedNames>
     <LocalizedName languagecode="1033" description="Microsoft Entra Service Principal Reference | Set Instance to Automatic when Tenant is unspecified" />
+    <LocalizedName languagecode="1044" description="Microsoft Entra Service Principal Reference | Set Instance to Automatic when Tenant is unspecified" />
   </LocalizedNames>
   <Descriptions>
     <Description languagecode="1033" description="Sets field Instance to Automatic when field Tenant is unspecified." />
+    <Description languagecode="1044" description="Sets field Instance to Automatic when field Tenant is unspecified." />
   </Descriptions>
 </Workflow>

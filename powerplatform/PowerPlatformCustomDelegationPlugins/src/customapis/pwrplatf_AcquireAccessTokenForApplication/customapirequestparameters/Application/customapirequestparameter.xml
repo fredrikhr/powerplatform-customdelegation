@@ -1,0 +1,14 @@
+<customapirequestparameter uniquename="Application">
+  <description default="Entity object specifying the requested application. Entity ID can be omitted if all required attributes are supplied.">
+    <label description="Entity object specifying the requested application. Entity ID can be omitted if all required attributes are supplied." languagecode="1033" />
+    <label description="Entity objekt som angir applikasjonen. Entity ID er ikke påkrevd dersom alle påkrevde attributter suppleres." languagecode="1044" />
+  </description>
+  <displayname default="Application">
+    <label description="Application" languagecode="1033" />
+    <label description="Applikasjon" languagecode="1044" />
+  </displayname>
+  <iscustomizable>1</iscustomizable>
+  <isoptional>1</isoptional>
+  <name>Application</name>
+  <type>3</type>
+</customapirequestparameter>

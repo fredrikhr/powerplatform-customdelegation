@@ -18,64 +18,61 @@
       "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
       "contentVersion": "1.0.0.0",
       "parameters": {
-        "$connections": {
-          "defaultValue": {},
-          "type": "Object"
-        },
         "$authentication": {
           "defaultValue": {},
           "type": "SecureObject"
         },
-        "TEST | Power Platform Custom Delegation | Key Vault Secret Name (test_fredrikhr_customdelegation_keyvaultsecretname)": {
-          "defaultValue": "Fredriksperiment-ClientSecret",
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "test_fredrikhr_customdelegation_appid": {
           "type": "String",
           "metadata": {
-            "schemaName": "test_fredrikhr_customdelegation_keyvaultsecretname",
-            "description": "Object Name of a Key Vault Secret containing the Client secret for Service Principal Access Token Acquisition"
+            "schemaName": "test_fredrikhr_customdelegation_appid"
           }
         },
-        "TEST | Power Platform Custom Delegation | App ID (test_fredrikhr_customdelegation_appid)": {
-          "defaultValue": "6a7576eb-e377-4b0e-995b-f79de45e8d59",
+        "test_fredrikhr_customdelegation_keyvaulturi": {
           "type": "String",
           "metadata": {
-            "schemaName": "test_fredrikhr_customdelegation_appid",
-            "description": "App ID (aka. Client ID) for testing Federated Credentials Service Principal Access Token Acquisition"
+            "schemaName": "test_fredrikhr_customdelegation_keyvaulturi"
           }
         },
-        "TEST | Power Platform Custom Delegation | Key Vault URI (test_fredrikhr_customdelegation_keyvaulturi)": {
-          "defaultValue": "https://frh-01.vault.azure.net/",
+        "test_fredrikhr_customdelegation_keyvaultsecretname": {
           "type": "String",
           "metadata": {
-            "schemaName": "test_fredrikhr_customdelegation_keyvaulturi",
-            "description": "Key Vault URI containing credentials for Service Principal Access Token Acquisition"
+            "schemaName": "test_fredrikhr_customdelegation_keyvaultsecretname"
+          }
+        },
+        "test_fredrikhr_customdelegation_keyvaultcertificatename": {
+          "type": "String",
+          "metadata": {
+            "schemaName": "test_fredrikhr_customdelegation_keyvaultcertificatename"
           }
         }
       },
       "triggers": {
         "manual": {
-          "metadata": {
-            "operationMetadataId": "61b7e223-2b18-4d47-8a0f-02496776d407"
-          },
           "type": "Request",
           "kind": "Button",
           "inputs": {
             "schema": {
               "type": "object",
               "properties": {
-                "text": {
+                "grantType": {
                   "title": "Client Authorization",
                   "type": "string",
                   "x-ms-dynamically-added": true,
                   "description": "Source credentials for Client Authorization",
+                  "x-ms-content-hint": "TEXT",
                   "enum": [
                     "Client Secret",
                     "Client Certificate"
-                  ],
-                  "x-ms-content-hint": "TEXT"
+                  ]
                 }
               },
               "required": [
-                "text"
+                "grantType"
               ]
             }
           }
@@ -84,9 +81,6 @@
       "actions": {
         "Redirect_URI": {
           "runAfter": {},
-          "metadata": {
-            "operationMetadataId": "859171de-6a63-4761-8d77-0cb6cafdc88b"
-          },
           "type": "Compose",
           "inputs": {
             "commonRedirectUri": "https://login.microsoftonline.com/common/oauth2/nativeclient",
@@ -99,150 +93,243 @@
               "Succeeded"
             ]
           },
-          "metadata": {
-            "operationMetadataId": "87934e51-2a8d-46b7-a1f6-f925505b417a"
-          },
           "type": "OpenApiConnection",
           "inputs": {
-            "host": {
-              "connectionName": "dataverse",
-              "operationId": "PerformUnboundAction",
-              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
-            },
             "parameters": {
               "actionName": "pwrplatf_GeneratePkceParameters"
             },
-            "authentication": {
-              "type": "Raw",
-              "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+            "host": {
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+              "operationId": "PerformUnboundAction",
+              "connectionName": "dataverse"
             }
           }
         },
-        "Authorization_URL_(Client_secret)": {
+        "Switch_on_Client_Authorization_type": {
           "runAfter": {
             "PKCE_Parameters": [
               "Succeeded"
             ]
           },
-          "metadata": {
-            "operationMetadataId": "8f372dce-30ed-4ebb-8de0-1239f2a79708"
-          },
-          "type": "OpenApiConnection",
-          "inputs": {
-            "host": {
-              "connectionName": "dataverse",
-              "operationId": "PerformUnboundAction",
-              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
-            },
-            "parameters": {
-              "actionName": "pwrplatf_GenerateAuthorizationUrl",
-              "item/ApplicationId": "@parameters('TEST | Power Platform Custom Delegation | App ID (test_fredrikhr_customdelegation_appid)')",
-              "item/CommonRedirectUri": "@outputs('Redirect_URI')['commonRedirectUri']",
-              "item/OneTimeRedirectUri": "@outputs('Redirect_URI')['oneTimeRedirectUri']",
-              "item/PkceS256CodeChallenge": "@body('PKCE_Parameters')['PkceCodeChallenge']",
-              "item/KeyVaultObjectType": 0,
-              "item/KeyVaultObjectName": "@parameters('TEST | Power Platform Custom Delegation | Key Vault Secret Name (test_fredrikhr_customdelegation_keyvaultsecretname)')",
-              "item/ResponseMode": "fragment",
-              "item/KeyVaultUri": "@parameters('TEST | Power Platform Custom Delegation | Key Vault URI (test_fredrikhr_customdelegation_keyvaulturi)')",
-              "item/Scopes": [
-                "openid",
-                "offline_access"
-              ],
-              "item/IncludeIdToken": true,
-              "item/NonceParameter": "@body('PKCE_Parameters')?['NonceParameter']"
-            },
-            "authentication": {
-              "type": "Raw",
-              "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+          "type": "Switch",
+          "expression": "@triggerBody()?['grantType']",
+          "cases": {
+            "Client_Certificate": {
+              "case": "Client Certificate",
+              "actions": {
+                "Authorization_URL_(Client_certificate)": {
+                  "runAfter": {},
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "parameters": {
+                      "actionName": "pwrplatf_GenerateAuthorizationUrl",
+                      "item/OneTimeRedirectUri": "@outputs('Redirect_URI')['oneTimeRedirectUri']",
+                      "item/ResponseMode": "fragment",
+                      "item/Scopes": [
+                        "openid",
+                        "offline_access"
+                      ],
+                      "item/NonceParameter": "@body('PKCE_Parameters')?['NonceParameter']",
+                      "item/PkceS256CodeChallenge": "@body('PKCE_Parameters')['PkceCodeChallenge']",
+                      "item/CommonRedirectUri": "@outputs('Redirect_URI')['commonRedirectUri']",
+                      "item/IncludeIdToken": true,
+                      "item/Application": {
+                        "@@odata.type": "Microsoft.Dynamics.CRM.managedidentity",
+                        "applicationid": "@parameters('test_fredrikhr_customdelegation_appid')"
+                      },
+                      "item/ClientCredentialsSource": {
+                        "@@odata.type": "Microsoft.Dynamics.CRM.keyvaultreference",
+                        "keytype": 1,
+                        "keyvaulturi": "@parameters('test_fredrikhr_customdelegation_keyvaulturi')",
+                        "keyname": "@parameters('test_fredrikhr_customdelegation_keyvaultcertificatename')"
+                      }
+                    },
+                    "host": {
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+                      "operationId": "PerformUnboundAction",
+                      "connectionName": "dataverse"
+                    }
+                  }
+                },
+                "Authorization_URL_query_JSON_partials_(Client_certificate)": {
+                  "runAfter": {
+                    "Authorization_URL_(Client_certificate)": [
+                      "Succeeded"
+                    ]
+                  },
+                  "type": "Select",
+                  "inputs": {
+                    "from": "@split(substring(uriQuery(body('Authorization_URL_(Client_certificate)')['AuthorizationRequestUrl']), 1), '&')",
+                    "select": "@slice(string(addProperty(json('{}'), decodeUriComponent(substring(item(), 0, indexOf(item(), '='))), decodeUriComponent(substring(item(), add(1, indexOf(item(), '=')))))), 1, -1)"
+                  }
+                },
+                "Authorization_URL_query_(Client_certificate)": {
+                  "runAfter": {
+                    "Authorization_URL_query_JSON_partials_(Client_certificate)": [
+                      "Succeeded"
+                    ]
+                  },
+                  "type": "ParseJson",
+                  "inputs": {
+                    "content": "@concat('{', join(body('Authorization_URL_query_JSON_partials_(Client_certificate)'), ','), '}')",
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "state": {
+                          "type": "string",
+                          "title": "Authorization State"
+                        }
+                      },
+                      "required": [
+                        "state"
+                      ]
+                    }
+                  }
+                },
+                "Decode_Authorization_state_(Client_certificate)": {
+                  "runAfter": {
+                    "Authorization_URL_query_(Client_certificate)": [
+                      "Succeeded"
+                    ]
+                  },
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "parameters": {
+                      "actionName": "pwrplatf_DecodeAuthorizationUrlState",
+                      "item/State": "@body('Authorization_URL_(Client_certificate)')['State']"
+                    },
+                    "host": {
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+                      "operationId": "PerformUnboundAction",
+                      "connectionName": "dataverse"
+                    }
+                  }
+                },
+                "Compare_One-Time_Redirect_URI_(Client_certificate)": {
+                  "runAfter": {
+                    "Decode_Authorization_state_(Client_certificate)": [
+                      "Succeeded"
+                    ]
+                  },
+                  "type": "Compose",
+                  "inputs": {
+                    "pre-encode": "@outputs('Redirect_URI')['oneTimeRedirectUri']",
+                    "post_decode": "@body('Decode_Authorization_state_(Client_certificate)')['OneTimeRedirectUrl']",
+                    "equal": "@equals(outputs('Redirect_URI')['oneTimeRedirectUri'], body('Decode_Authorization_state_(Client_certificate)')['OneTimeRedirectUrl'])"
+                  }
+                }
+              }
             }
-          }
-        },
-        "Authorization_URL_query_JSON_partials_(Client_secret)": {
-          "runAfter": {
-            "Authorization_URL_(Client_secret)": [
-              "Succeeded"
-            ]
           },
-          "metadata": {
-            "operationMetadataId": "565ef290-42d6-4ae0-9200-29989e0d6440"
-          },
-          "type": "Select",
-          "inputs": {
-            "from": "@split(substring(uriQuery(body('Authorization_URL_(Client_secret)')['AuthorizationRequestUrl']), 1), '&')",
-            "select": "@slice(string(addProperty(json('{}'), decodeUriComponent(substring(item(), 0, indexOf(item(), '='))), decodeUriComponent(substring(item(), add(1, indexOf(item(), '=')))))), 1, -1)"
-          }
-        },
-        "Authorization_URL_query_(Client_secret)": {
-          "runAfter": {
-            "Authorization_URL_query_JSON_partials_(Client_secret)": [
-              "Succeeded"
-            ]
-          },
-          "metadata": {
-            "operationMetadataId": "f12f7462-55cf-4bc3-9879-82185608ad25"
-          },
-          "type": "ParseJson",
-          "inputs": {
-            "content": "@concat('{', join(body('Authorization_URL_query_JSON_partials_(Client_secret)'), ','), '}')",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "state": {
-                  "type": "string",
-                  "title": "Authorization State"
+          "default": {
+            "actions": {
+              "Authorization_URL_(Client_secret)": {
+                "runAfter": {},
+                "type": "OpenApiConnection",
+                "inputs": {
+                  "parameters": {
+                    "actionName": "pwrplatf_GenerateAuthorizationUrl",
+                    "item/OneTimeRedirectUri": "@outputs('Redirect_URI')['oneTimeRedirectUri']",
+                    "item/ResponseMode": "fragment",
+                    "item/Scopes": [
+                      "openid",
+                      "offline_access"
+                    ],
+                    "item/NonceParameter": "@body('PKCE_Parameters')?['NonceParameter']",
+                    "item/PkceS256CodeChallenge": "@body('PKCE_Parameters')['PkceCodeChallenge']",
+                    "item/CommonRedirectUri": "@outputs('Redirect_URI')['commonRedirectUri']",
+                    "item/IncludeIdToken": true,
+                    "item/Application": {
+                      "@@odata.type": "Microsoft.Dynamics.CRM.managedidentity",
+                      "applicationid": "@parameters('test_fredrikhr_customdelegation_appid')"
+                    },
+                    "item/ClientCredentialsSource": {
+                      "@@odata.type": "Microsoft.Dynamics.CRM.keyvaultreference",
+                      "keytype": 0,
+                      "keyvaulturi": "@parameters('test_fredrikhr_customdelegation_keyvaulturi')",
+                      "keyname": "@parameters('test_fredrikhr_customdelegation_keyvaultsecretname')"
+                    }
+                  },
+                  "host": {
+                    "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+                    "operationId": "PerformUnboundAction",
+                    "connectionName": "dataverse"
+                  }
                 }
               },
-              "required": [
-                "state"
-              ]
+              "Authorization_URL_query_JSON_partials_(Client_secret)": {
+                "runAfter": {
+                  "Authorization_URL_(Client_secret)": [
+                    "Succeeded"
+                  ]
+                },
+                "type": "Select",
+                "inputs": {
+                  "from": "@split(substring(uriQuery(body('Authorization_URL_(Client_secret)')['AuthorizationRequestUrl']), 1), '&')",
+                  "select": "@slice(string(addProperty(json('{}'), decodeUriComponent(substring(item(), 0, indexOf(item(), '='))), decodeUriComponent(substring(item(), add(1, indexOf(item(), '=')))))), 1, -1)"
+                }
+              },
+              "Authorization_URL_query_(Client_secret)": {
+                "runAfter": {
+                  "Authorization_URL_query_JSON_partials_(Client_secret)": [
+                    "Succeeded"
+                  ]
+                },
+                "type": "ParseJson",
+                "inputs": {
+                  "content": "@concat('{', join(body('Authorization_URL_query_JSON_partials_(Client_secret)'), ','), '}')",
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "state": {
+                        "type": "string",
+                        "title": "Authorization State"
+                      }
+                    },
+                    "required": [
+                      "state"
+                    ]
+                  }
+                }
+              },
+              "Decode_Authorization_state_(Client_secret)": {
+                "runAfter": {
+                  "Authorization_URL_query_(Client_secret)": [
+                    "Succeeded"
+                  ]
+                },
+                "type": "OpenApiConnection",
+                "inputs": {
+                  "parameters": {
+                    "actionName": "pwrplatf_DecodeAuthorizationUrlState",
+                    "item/State": "@body('Authorization_URL_(Client_secret)')['State']"
+                  },
+                  "host": {
+                    "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+                    "operationId": "PerformUnboundAction",
+                    "connectionName": "dataverse"
+                  }
+                }
+              },
+              "Compare_One-Time_Redirect_URI_(Client_secret)": {
+                "runAfter": {
+                  "Decode_Authorization_state_(Client_secret)": [
+                    "Succeeded"
+                  ]
+                },
+                "type": "Compose",
+                "inputs": {
+                  "pre-encode": "@outputs('Redirect_URI')['oneTimeRedirectUri']",
+                  "post_decode": "@body('Decode_Authorization_state_(Client_secret)')['OneTimeRedirectUrl']",
+                  "equal": "@equals(outputs('Redirect_URI')['oneTimeRedirectUri'], body('Decode_Authorization_state_(Client_secret)')['OneTimeRedirectUrl'])"
+                }
+              }
             }
-          }
-        },
-        "Decode_Authorization_state_(Client_secret)": {
-          "runAfter": {
-            "Authorization_URL_query_(Client_secret)": [
-              "Succeeded"
-            ]
-          },
-          "metadata": {
-            "operationMetadataId": "7dc64c40-fc6b-4f9b-bb90-96d3927fc5b8"
-          },
-          "type": "OpenApiConnection",
-          "inputs": {
-            "host": {
-              "connectionName": "dataverse",
-              "operationId": "PerformUnboundAction",
-              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
-            },
-            "parameters": {
-              "actionName": "pwrplatf_DecodeAuthorizationUrlState",
-              "item/State": "@body('Authorization_URL_query_(Client_secret)')['state']"
-            },
-            "authentication": {
-              "type": "Raw",
-              "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
-            }
-          }
-        },
-        "Compare_One-Time_Redirect_URI_(Client_secret)": {
-          "runAfter": {
-            "Decode_Authorization_state_(Client_secret)": [
-              "Succeeded"
-            ]
-          },
-          "metadata": {
-            "operationMetadataId": "557786eb-b833-4061-854f-8fe8824cc9f7"
-          },
-          "type": "Compose",
-          "inputs": {
-            "pre-encode": "@outputs('Redirect_URI')['oneTimeRedirectUri']",
-            "post_decode": "@body('Decode_Authorization_state_(Client_secret)')['OneTimeRedirectUrl']",
-            "equal": "@equals(outputs('Redirect_URI')['oneTimeRedirectUri'], body('Decode_Authorization_state_(Client_secret)')['OneTimeRedirectUrl'])"
           }
         }
       }
     },
-    "templateName": ""
+    "templateName": null
   },
   "schemaVersion": "1.0.0.0"
 }

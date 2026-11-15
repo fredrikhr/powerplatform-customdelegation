@@ -1,12 +1,1 @@
-<customapirequestparameter uniquename="Scopes">
-  <description default="A list of scopes that you want the user to consent to.">
-    <label description="A list of scopes that you want the user to consent to." languagecode="1033" />
-  </description>
-  <displayname default="Scopes">
-    <label description="Scopes" languagecode="1033" />
-  </displayname>
-  <iscustomizable>1</iscustomizable>
-  <isoptional>0</isoptional>
-  <name>Scopes</name>
-  <type>11</type>
-</customapirequestparameter>
+<customapirequestparameter uniquename="Scopes"></customapirequestparameter>

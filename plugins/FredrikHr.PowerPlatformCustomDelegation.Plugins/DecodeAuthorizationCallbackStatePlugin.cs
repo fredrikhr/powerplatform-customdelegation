@@ -1,19 +1,21 @@
-using Azure.Core;
-using Azure.Security.KeyVault.Keys.Cryptography;
+using Azure.Security.KeyVault.Certificates;
 using Azure.Security.KeyVault.Secrets;
 
 using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
 
-using FredrikHr.PowerPlatformSdkExtensions.PluginRuntime;
 using FredrikHr.PowerPlatformCustomDelegation.Common;
+using FredrikHr.PowerPlatformCustomDelegation.Common.JosePbes2;
+using FredrikHr.PowerPlatformSdkExtensions.PluginRuntime;
+using Azure.Security.KeyVault.Keys.Cryptography;
+using System.Security.Cryptography;
 
 namespace FredrikHr.PowerPlatformCustomDelegation.Plugins;
 
-public class DecodeAuthorizationCallbackStatePlugin()
-    : PluginBase(), IPlugin
+public class DecodeAuthorizationCallbackStatePlugin() : PluginBase(), IPlugin
 {
     private const StringComparison OrdInv = StringComparison.OrdinalIgnoreCase;
+    private static readonly Pbes2CryptoProviderFactory Pbes2CryptoProviderFactory = new();
     private readonly JsonWebTokenHandler _jwtHandler = new();
 
     internal static class InputParameterNames
@@ -28,11 +30,34 @@ public class DecodeAuthorizationCallbackStatePlugin()
 
     protected override void ExecuteCore(
         IServiceProvider serviceProvider,
-        PluginExecutionInformation info
-        )
+        PluginExecutionInformation info)
+    {
+#if DEBUG
+        bool prevShowPii = Microsoft.IdentityModel.Logging.IdentityModelEventSource.ShowPII;
+#endif
+        try
+        {
+#if DEBUG
+            Microsoft.IdentityModel.Logging.IdentityModelEventSource.ShowPII = true;
+#endif
+
+            ExecuteCoreImpl(serviceProvider, info);
+        }
+        finally
+        {
+#if DEBUG
+            Microsoft.IdentityModel.Logging.IdentityModelEventSource.ShowPII = prevShowPii;
+#endif
+        }
+    }
+
+    private void ExecuteCoreImpl(
+        IServiceProvider serviceProvider,
+        PluginExecutionInformation info)
     {
         info ??= new(serviceProvider);
-        PowerPlatformFicTokenCredential pluginAzureCredential = new(serviceProvider);
+        PowerPlatformFicTokenCredential azureCreds = new(serviceProvider);
+        AzureUtility azureUtility = new(azureCreds);
 
         var context = serviceProvider.Get<IPluginExecutionContext>();
         ParameterCollection inputs = context.InputParameters;
@@ -40,41 +65,37 @@ public class DecodeAuthorizationCallbackStatePlugin()
 
         if (!inputs.TryGetValue(
             InputParameterNames.State,
-            out string stateJwtEncodedText) ||
-            string.IsNullOrEmpty(stateJwtEncodedText))
+            out string stateJweText) ||
+            string.IsNullOrEmpty(stateJweText))
         {
             throw new InvalidPluginExecutionException(
                 httpStatus: PluginHttpStatusCode.BadRequest,
-                message: $"Missing or empty required parameter: {InputParameterNames.State}"
-                );
+                message: $"Missing or empty required parameter: {InputParameterNames.State}");
         }
 
         JsonWebToken stateJwt;
         try
         {
-            stateJwt = _jwtHandler.ReadJsonWebToken(stateJwtEncodedText);
+            stateJwt = _jwtHandler.ReadJsonWebToken(stateJweText);
         }
         catch (Exception jwtjweReadExcept)
         {
             info.TracingService.Trace(
                 "While reading state parameter as JWT: {0}",
-                jwtjweReadExcept
-                );
+                jwtjweReadExcept);
             throw new InvalidPluginExecutionException(
                 httpStatus: PluginHttpStatusCode.BadRequest,
-                message: $"Unable to read provided parameter '{InputParameterNames.State}' as a JWT in compact serialization format: {jwtjweReadExcept.Message}"
-                );
+                message: $"Unable to read provided parameter '{InputParameterNames.State}' as a JWT in compact serialization format: {jwtjweReadExcept.Message}");
         }
         if (!stateJwt.IsEncrypted)
         {
             throw new InvalidPluginExecutionException(
                 httpStatus: PluginHttpStatusCode.BadRequest,
-                message: $"Specified parameter '{InputParameterNames.State}' is not an encrpted JSON Web Token."
-                );
+                message: $"Specified parameter '{InputParameterNames.State}' is not an encrpted JSON Web Token.");
         }
 
         SecurityKey stateJweSecurityKey;
-        if (JwtConstants.DirectKeyUseAlg.Equals(stateJwt.Alg, OrdInv))
+        if (Pbes2CryptoProviderFactory.IsSupportedPbes2KeyWrapAlgorithm(stateJwt.Alg, key: null))
         {
             if (string.IsNullOrEmpty(stateJwt.Kid))
             {
@@ -84,71 +105,98 @@ public class DecodeAuthorizationCallbackStatePlugin()
                     );
             }
 
-            if (SecurityAlgorithms.Aes128CbcHmacSha256.Equals(stateJwt.Enc, OrdInv))
+            Uri keyVaultSecretUri = new(stateJwt.Kid, UriKind.Absolute);
+            if (!KeyVaultSecretIdentifier.TryCreate(keyVaultSecretUri, out var keyVaultSecretId))
             {
-                Uri keyVaultSecretUri = new(stateJwt.Kid, UriKind.Absolute);
-                if (!KeyVaultSecretIdentifier.TryCreate(keyVaultSecretUri, out var keyVaultSecretId))
-                {
-                    info.TracingService.Trace(
-                        "Unable to create Key Vault Secret ID from URI: {0}",
-                        keyVaultSecretUri
-                        );
-                    throw new InvalidPluginExecutionException(
-                        httpStatus: PluginHttpStatusCode.BadRequest,
-                        message: $"Specified JWE specifies an invalid URI for a Key Vault Secret. URI: {keyVaultSecretUri}"
-                        );
-                }
-                SecretClient keyVaultClient = new(
-                    keyVaultSecretId.VaultUri,
-                    pluginAzureCredential
+                info.TracingService.Trace(
+                    "Unable to create Key Vault Secret ID from URI: {0}",
+                    keyVaultSecretUri
                     );
-                KeyVaultSecret keyVaultSecretData = keyVaultClient
-                    .GetSecretAsync(keyVaultSecretId.Name, keyVaultSecretId.Version)
-                    .GetAwaiter().GetResult();
-                stateJweSecurityKey = KeyVaultPluginUtility
-                    .GetKeyVaultSecretSecurityKey(
-                        keyVaultSecretData,
-                        keySizeBits: 256
-                        );
+                throw new InvalidPluginExecutionException(
+                    httpStatus: PluginHttpStatusCode.BadRequest,
+                    message: $"Specified JWE specifies an invalid URI for a Key Vault Secret. URI: {keyVaultSecretUri}"
+                    );
             }
-            else
+            SecretClient keyVaultClient = new(
+                keyVaultSecretId.VaultUri,
+                azureCreds
+                );
+            KeyVaultSecret keyVaultSecretData = keyVaultClient
+                .GetSecretAsync(keyVaultSecretId.Name, keyVaultSecretId.Version)
+                .GetAwaiter().GetResult();
+
+            if (!stateJwt.TryGetHeaderValue(
+                Pbes2Constants.Pbes2SaltInputHeaderParameter,
+                out string? p2s) ||
+                p2s is null)
             {
                 throw new InvalidPluginExecutionException(
                     httpStatus: PluginHttpStatusCode.BadRequest,
-                    message: $"Invalid content encryption algorithm in JWE header in parameter '{InputParameterNames.State}': {stateJwt.Enc}"
-                    );
+                    message: $"Missing JWE Header Parameter '{Pbes2Constants.Pbes2SaltInputHeaderParameter}' required for specified algorithm '{stateJwt.Alg}'.");
             }
+
+            if (!stateJwt.TryGetHeaderValue(
+                Pbes2Constants.Pbes2IterationCountHeaderParameter,
+                out int p2c))
+            {
+                throw new InvalidPluginExecutionException(
+                    httpStatus: PluginHttpStatusCode.BadRequest,
+                    message: $"Missing JWE Header Parameter '{Pbes2Constants.Pbes2IterationCountHeaderParameter}' required for specified algorithm '{stateJwt.Alg}'.");
+            }
+
+            byte[] p2sBytes;
+            try
+            {
+                p2sBytes = Base64UrlEncoder.DecodeBytes(p2s);
+            }
+            catch (Exception p2sDecodeExcept)
+            {
+                throw new InvalidPluginExecutionException(
+                    httpStatus: PluginHttpStatusCode.BadRequest,
+                    message: $"Specified JWE Header Parameter '{Pbes2Constants.Pbes2SaltInputHeaderParameter}' could not be decoded as a Base64URL encoded octet-string: {p2sDecodeExcept}");
+            }
+
+            stateJweSecurityKey = new Pbes2SecurityKey(keyVaultSecretData.Value, p2sBytes)
+            {
+                KeyId = stateJwt.Kid,
+                IterationCount = p2c,
+                CryptoProviderFactory = Pbes2CryptoProviderFactory,
+            };
+
+            p2sBytes.AsSpan().Clear();
         }
         else if (SecurityAlgorithms.RsaOAEP.Equals(stateJwt.Alg, OrdInv))
         {
-            string keyVaultRsaKeyId = stateJwt.Kid;
-            TokenCredential keyVaultTokenCreds = pluginAzureCredential;
-            CryptographyClientOptions keyVaultCryptoClientOptions = new();
-            KeyResolver keyVaultKeyResolver = new(keyVaultTokenCreds, keyVaultCryptoClientOptions);
-            CryptographyClient keyVaultCryptoClient = keyVaultKeyResolver
-                .Resolve(new(keyVaultRsaKeyId, UriKind.Absolute));
-            RSAKeyVault keyVaultRsaKey = keyVaultCryptoClient.CreateRSA();
-            stateJweSecurityKey = new RsaSecurityKey(keyVaultRsaKey)
-            { KeyId = keyVaultRsaKey.KeyId };
+            if (string.IsNullOrEmpty(stateJwt.Kid))
+            {
+                throw new InvalidPluginExecutionException(
+                    httpStatus: PluginHttpStatusCode.BadRequest,
+                    message: $"Missing Key Vault claims in JWE header in parameter '{InputParameterNames.State}'. JWE header value '{JwtHeaderParameterNames.Kid}' was expected to refer to the ID of a Key Vault Certificate.");
+            }
+
+            stateJweSecurityKey = KeyVaultPluginUtility.GetKeyVaultPrivateX509SecurityKeyAsync(
+                azureUtility.TokenCredential,
+                new Uri(stateJwt.Kid))
+                .GetAwaiter().GetResult();
         }
         else
         {
             throw new InvalidPluginExecutionException(
                 httpStatus: PluginHttpStatusCode.BadRequest,
-                message: $"Invalid token encryption algorithm in JWE header in parameter '{InputParameterNames.State}': {stateJwt.Alg}"
-                );
+                message: $"Invalid CEK encryption algorithm in JWE header '{JwtHeaderParameterNames.Alg}' in parameter '{InputParameterNames.State}': {stateJwt.Alg}");
         }
 
+        string stateDecryptedJwtString;
         try
         {
-            stateJwtEncodedText = _jwtHandler.DecryptToken(stateJwt, new()
+            stateDecryptedJwtString = _jwtHandler.DecryptToken(stateJwt, new()
             {
                 TokenDecryptionKey = stateJweSecurityKey,
             });
         }
         catch (Exception jweDecryptExcept)
         {
-            info.TracingService.Trace(
+            serviceProvider.Get<ITracingService>()?.Trace(
                 "While decrypting JWE: {0}",
                 jweDecryptExcept
                 );
@@ -157,13 +205,14 @@ public class DecodeAuthorizationCallbackStatePlugin()
                 message: $"Unable to decrypt JWE specified in parameter '{InputParameterNames.State}': {jweDecryptExcept.Message}"
                 );
         }
+
         try
         {
-            stateJwt = _jwtHandler.ReadJsonWebToken(stateJwtEncodedText);
+            stateJwt = _jwtHandler.ReadJsonWebToken(stateDecryptedJwtString);
         }
         catch (Exception jwtReadExcept)
         {
-            info.TracingService.Trace(
+            serviceProvider.Get<ITracingService>()?.Trace(
                 "While reading decrypted JWT: {0}",
                 jwtReadExcept
                 );
@@ -184,21 +233,22 @@ public class DecodeAuthorizationCallbackStatePlugin()
 #pragma warning restore CA5404 // Do not disable token validation checks
         if (!stateJwtValidateResult.IsValid)
         {
+            info.TracingService.Trace(
+                "While decrypting JWE: {0}",
+                stateJwtValidateResult.Exception);
             throw new InvalidPluginExecutionException(
                 httpStatus: PluginHttpStatusCode.BadRequest,
-                message: $"Invalid embedded JWT specified in parameter '{InputParameterNames.State}': {stateJwtValidateResult.Exception?.Message}"
-                );
+                message: $"Invalid embedded JWT specified in parameter '{InputParameterNames.State}': {stateJwtValidateResult.Exception?.Message}");
         }
+
         if (!stateJwt.TryGetValue(
             GetAuthorizationUrlPlugin.JwtClaimNames.OneTimeRedirectUri,
             out string oneTimeRedirectUri) ||
-            string.IsNullOrEmpty(oneTimeRedirectUri)
-            )
+            string.IsNullOrEmpty(oneTimeRedirectUri))
         {
             throw new InvalidPluginExecutionException(
                 httpStatus: PluginHttpStatusCode.BadRequest,
-                message: $"Embedded JWT specified in parameter '{InputParameterNames.State}' is missing required claim: {GetAuthorizationUrlPlugin.JwtClaimNames.OneTimeRedirectUri}"
-                );
+                message: $"Embedded JWT specified in parameter '{InputParameterNames.State}' is missing required claim: {GetAuthorizationUrlPlugin.JwtClaimNames.OneTimeRedirectUri}");
         }
 
         outputs[OutputParameterNames.OneTimeRedirectUrl] = oneTimeRedirectUri;

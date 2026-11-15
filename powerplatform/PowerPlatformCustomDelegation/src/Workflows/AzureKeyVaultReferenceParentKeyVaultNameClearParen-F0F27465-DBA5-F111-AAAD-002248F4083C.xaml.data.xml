@@ -24,8 +24,10 @@
   <PrimaryEntity>az_keyvaultreference</PrimaryEntity>
   <LocalizedNames>
     <LocalizedName languagecode="1033" description="Azure Key Vault Reference | Parent, Key Vault Name → Clear Parent (component)" />
+    <LocalizedName languagecode="1044" description="Azure Key Vault Reference | Parent, Key Vault Name → Clear Parent (component)" />
   </LocalizedNames>
   <Descriptions>
     <Description languagecode="1033" description="Clear field Parent (component) when either Parent or Key Vault Name is specified" />
+    <Description languagecode="1044" description="Clear field Parent (component) when either Parent or Key Vault Name is specified" />
   </Descriptions>
 </Workflow>

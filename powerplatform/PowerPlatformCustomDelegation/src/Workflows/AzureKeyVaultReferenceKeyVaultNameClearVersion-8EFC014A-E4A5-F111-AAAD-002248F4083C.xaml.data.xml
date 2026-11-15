@@ -24,8 +24,10 @@
   <PrimaryEntity>az_keyvaultreference</PrimaryEntity>
   <LocalizedNames>
     <LocalizedName languagecode="1033" description="Azure Key Vault Reference | Key Vault Name → Clear Version" />
+    <LocalizedName languagecode="1044" description="Azure Key Vault Reference | Key Vault Name → Clear Version" />
   </LocalizedNames>
   <Descriptions>
     <Description languagecode="1033" description="Clear field Version when Key Vault Name is specified" />
+    <Description languagecode="1044" description="Clear field Version when Key Vault Name is specified" />
   </Descriptions>
 </Workflow>

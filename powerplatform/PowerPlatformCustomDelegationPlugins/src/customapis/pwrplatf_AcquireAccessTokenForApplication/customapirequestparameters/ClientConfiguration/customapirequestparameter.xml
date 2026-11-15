@@ -1,0 +1,15 @@
+<customapirequestparameter uniquename="ClientConfiguration">
+  <description default="Entity reference specifying the configuration for the MSAL confidential client application">
+    <label description="Entity reference specifying the configuration for the MSAL confidential client application" languagecode="1033" />
+    <label description="Reference som spesifiserer konfigurasjonen for MSAL konfidensiell klientapplikasjon" languagecode="1044" />
+  </description>
+  <displayname default="Configuration">
+    <label description="Configuration" languagecode="1033" />
+    <label description="Konfigurasjon" languagecode="1044" />
+  </displayname>
+  <iscustomizable>1</iscustomizable>
+  <isoptional>1</isoptional>
+  <logicalentityname>msal_confidentialclientconfiguration</logicalentityname>
+  <name>ClientConfiguration</name>
+  <type>5</type>
+</customapirequestparameter>

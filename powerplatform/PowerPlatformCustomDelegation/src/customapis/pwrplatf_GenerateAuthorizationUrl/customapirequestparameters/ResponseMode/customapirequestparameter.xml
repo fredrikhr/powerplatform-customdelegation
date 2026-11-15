@@ -1,12 +1,1 @@
-<customapirequestparameter uniquename="ResponseMode">
-  <description default="Specifies how the identity platform should return the authorization code to the redirect URI. Supports: query, fragment and form_post">
-    <label description="Specifies how the identity platform should return the authorization code to the redirect URI. Supports: query, fragment and form_post" languagecode="1033" />
-  </description>
-  <displayname default="Response Mode">
-    <label description="Response Mode" languagecode="1033" />
-  </displayname>
-  <iscustomizable>1</iscustomizable>
-  <isoptional>1</isoptional>
-  <name>ResponseMode</name>
-  <type>10</type>
-</customapirequestparameter>
+<customapirequestparameter uniquename="ResponseMode"></customapirequestparameter>

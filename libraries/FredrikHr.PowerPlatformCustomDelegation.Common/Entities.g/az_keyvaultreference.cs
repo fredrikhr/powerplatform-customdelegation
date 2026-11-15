@@ -13,7 +13,7 @@ namespace FredrikHr.PowerPlatformCustomDelegation.Entities
 	
 	
 	/// <summary>
-	/// Status of the Azure Key Vault Reference
+	/// State of the Azure Key Vault Reference
 	/// </summary>
 	[System.Runtime.Serialization.DataContractAttribute()]
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("Dataverse Model Builder", "2.0.0.16")]
@@ -28,7 +28,7 @@ namespace FredrikHr.PowerPlatformCustomDelegation.Entities
 	}
 	
 	/// <summary>
-	/// Reason for the status of the Azure Key Vault Reference
+	/// Status of the Azure Key Vault Reference
 	/// </summary>
 	[System.Runtime.Serialization.DataContractAttribute()]
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("Dataverse Model Builder", "2.0.0.16")]
@@ -114,6 +114,7 @@ namespace FredrikHr.PowerPlatformCustomDelegation.Entities
 			public const string UTCConversionTimeZoneCode = "utcconversiontimezonecode";
 			public const string VersionNumber = "versionnumber";
 			public const string Referencedaz_keyvaultreference_templatesource_hierarchical = "Referencedaz_keyvaultreference_templatesource_hierarchical";
+			public const string msal_confidentialclientconfiguration_credentials_az_keyvaultreference = "msal_confidentialclientconfiguration_credentials_az_keyvaultreference";
 			public const string Referencingaz_keyvaultreference_templatesource_hierarchical = "az_keyvaultreference_templatesource_hierarchical";
 		}
 		
@@ -653,6 +654,22 @@ namespace FredrikHr.PowerPlatformCustomDelegation.Entities
 			set
 			{
 				this.SetRelatedEntities<FredrikHr.PowerPlatformCustomDelegation.Entities.az_keyvaultreference>("az_keyvaultreference_templatesource_hierarchical", Microsoft.Xrm.Sdk.EntityRole.Referenced, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N msal_confidentialclientconfiguration_credentials_az_keyvaultreference
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("msal_confidentialclientconfiguration_credentials_az_keyvaultreference")]
+		public System.Collections.Generic.IEnumerable<FredrikHr.PowerPlatformCustomDelegation.Entities.msal_confidentialclientconfiguration> msal_confidentialclientconfiguration_credentials_az_keyvaultreference
+		{
+			get
+			{
+				return this.GetRelatedEntities<FredrikHr.PowerPlatformCustomDelegation.Entities.msal_confidentialclientconfiguration>("msal_confidentialclientconfiguration_credentials_az_keyvaultreference", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<FredrikHr.PowerPlatformCustomDelegation.Entities.msal_confidentialclientconfiguration>("msal_confidentialclientconfiguration_credentials_az_keyvaultreference", null, value);
 			}
 		}
 		

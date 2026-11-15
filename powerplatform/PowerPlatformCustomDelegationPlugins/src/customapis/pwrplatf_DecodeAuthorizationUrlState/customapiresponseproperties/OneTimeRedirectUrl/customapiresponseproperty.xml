@@ -1,0 +1,13 @@
+<customapiresponseproperty uniquename="OneTimeRedirectUrl">
+  <description default="Protected one-time usable redirect URI to handle the authorization callback">
+    <label description="Protected one-time usable redirect URI to handle the authorization callback" languagecode="1033" />
+    <label description="Protected one-time usable redirect URI to handle the authorization callback" languagecode="1044" />
+  </description>
+  <displayname default="One-Time Redirect URI">
+    <label description="One-Time Redirect URI" languagecode="1033" />
+    <label description="One-Time Redirect URI" languagecode="1044" />
+  </displayname>
+  <iscustomizable>1</iscustomizable>
+  <name>OneTimeRedirectUrl</name>
+  <type>10</type>
+</customapiresponseproperty>

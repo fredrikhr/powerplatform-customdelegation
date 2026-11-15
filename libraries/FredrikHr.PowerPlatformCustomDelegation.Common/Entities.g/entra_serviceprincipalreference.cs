@@ -13,7 +13,7 @@ namespace FredrikHr.PowerPlatformCustomDelegation.Entities
 	
 	
 	/// <summary>
-	/// Status of the Microsoft Entra Service Principal Reference
+	/// State of the Service Principal Reference
 	/// </summary>
 	[System.Runtime.Serialization.DataContractAttribute()]
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("Dataverse Model Builder", "2.0.0.16")]
@@ -28,7 +28,7 @@ namespace FredrikHr.PowerPlatformCustomDelegation.Entities
 	}
 	
 	/// <summary>
-	/// Reason for the status of the Microsoft Entra Service Principal Reference
+	/// Status of the Service Principal Reference
 	/// </summary>
 	[System.Runtime.Serialization.DataContractAttribute()]
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("Dataverse Model Builder", "2.0.0.16")]
@@ -76,6 +76,7 @@ namespace FredrikHr.PowerPlatformCustomDelegation.Entities
 			public const string TimeZoneRuleVersionNumber = "timezoneruleversionnumber";
 			public const string UTCConversionTimeZoneCode = "utcconversiontimezonecode";
 			public const string VersionNumber = "versionnumber";
+			public const string msal_confidentialclientconfiguration_clientinfo_entra_serviceprincipalreference = "msal_confidentialclientconfiguration_clientinfo_entra_serviceprincipalreference";
 		}
 		
 		/// <summary>
@@ -422,6 +423,22 @@ namespace FredrikHr.PowerPlatformCustomDelegation.Entities
 			get
 			{
 				return this.GetAttributeValue<System.Nullable<long>>("versionnumber");
+			}
+		}
+		
+		/// <summary>
+		/// 1:N msal_confidentialclientconfiguration_clientinfo_entra_serviceprincipalreference
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("msal_confidentialclientconfiguration_clientinfo_entra_serviceprincipalreference")]
+		public System.Collections.Generic.IEnumerable<FredrikHr.PowerPlatformCustomDelegation.Entities.msal_confidentialclientconfiguration> msal_confidentialclientconfiguration_clientinfo_entra_serviceprincipalreference
+		{
+			get
+			{
+				return this.GetRelatedEntities<FredrikHr.PowerPlatformCustomDelegation.Entities.msal_confidentialclientconfiguration>("msal_confidentialclientconfiguration_clientinfo_entra_serviceprincipalreference", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<FredrikHr.PowerPlatformCustomDelegation.Entities.msal_confidentialclientconfiguration>("msal_confidentialclientconfiguration_clientinfo_entra_serviceprincipalreference", null, value);
 			}
 		}
 	}

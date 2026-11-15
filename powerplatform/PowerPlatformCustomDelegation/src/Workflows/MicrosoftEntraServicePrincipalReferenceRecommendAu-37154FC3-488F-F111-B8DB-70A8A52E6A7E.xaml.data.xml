@@ -24,9 +24,11 @@
   <PrimaryEntity>entra_serviceprincipalreference</PrimaryEntity>
   <LocalizedNames>
     <LocalizedName languagecode="1033" description="Microsoft Entra Service Principal Reference | Recommend Automatic Instance and Tenant" />
+    <LocalizedName languagecode="1044" description="Microsoft Entra Service Principal Reference | Recommend Automatic Instance and Tenant" />
   </LocalizedNames>
   <Descriptions>
     <Description languagecode="1033" description="Recommends usage of automatic values for Instance and Tenant" />
+    <Description languagecode="1044" description="Recommends usage of automatic values for Instance and Tenant" />
   </Descriptions>
   <labels>
     <steplabels id="{6056ad18-6f72-4ced-ac6f-c7f654258654}">

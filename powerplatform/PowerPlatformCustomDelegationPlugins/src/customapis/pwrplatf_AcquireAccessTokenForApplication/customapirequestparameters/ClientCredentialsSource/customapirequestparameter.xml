@@ -1,0 +1,14 @@
+<customapirequestparameter uniquename="ClientCredentialsSource">
+  <description default="Entity object specifying the source of the credentials used to authenticate as the requested application. Entity ID can be omitted if all required attributes are specified.">
+    <label description="Entity object specifying the source of the credentials used to authenticate as the requested application. Entity ID can be omitted if all required attributes are specified." languagecode="1033" />
+    <label description="Entity objekt som angir kilden for legitimasjon brukt ved autentifisering som angitt applikasjon. Entity ID er ikke påkrevd dersom alle påkrevde attributter suppleres." languagecode="1044" />
+  </description>
+  <displayname default="Client Credentials Source">
+    <label description="Client Credentials Source" languagecode="1033" />
+    <label description="Kilde for Klientlegitimasjon" languagecode="1044" />
+  </displayname>
+  <iscustomizable>1</iscustomizable>
+  <isoptional>1</isoptional>
+  <name>ClientCredentialsSource</name>
+  <type>3</type>
+</customapirequestparameter>

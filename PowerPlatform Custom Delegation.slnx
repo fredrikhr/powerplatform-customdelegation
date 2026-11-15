@@ -37,6 +37,7 @@
     <File Path="powerplatform/Directory.Build.targets" />
     <Project Path="powerplatform/PowerPlatformCustomDelegation/PowerPlatformCustomDelegation.cdsproj" Type="C#" />
     <Project Path="powerplatform/PowerPlatformCustomDelegationBase/PowerPlatformCustomDelegationBase.cdsproj" Type="C#" />
+    <Project Path="powerplatform/PowerPlatformCustomDelegationPlugins/PowerPlatformCustomDelegationPlugins.cdsproj" Type="C#" />
   </Folder>
   <Folder Name="/powerplatform-test/">
     <File Path="powerplatform-test/Directory.Build.props" />

@@ -1,12 +1,1 @@
-<customapirequestparameter uniquename="JsonWebToken">
-  <description default="The JWT to validate, a JWS in compact serialization form">
-    <label description="The JWT to validate, a JWS in compact serialization form" languagecode="1033" />
-  </description>
-  <displayname default="JSON Web Token">
-    <label description="JSON Web Token" languagecode="1033" />
-  </displayname>
-  <iscustomizable>1</iscustomizable>
-  <isoptional>0</isoptional>
-  <name>JsonWebToken</name>
-  <type>10</type>
-</customapirequestparameter>
+<customapirequestparameter uniquename="JsonWebToken"></customapirequestparameter>

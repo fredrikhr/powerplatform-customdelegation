@@ -25,8 +25,10 @@
   <PrimaryEntity>az_keyvaultreference</PrimaryEntity>
   <LocalizedNames>
     <LocalizedName languagecode="1033" description="Azure Key Vault Reference | Auto Display Name" />
+    <LocalizedName languagecode="1044" description="Azure Key Vault Reference | Auto Display Name" />
   </LocalizedNames>
   <Descriptions>
     <Description languagecode="1033" description="Sets the Display Name based on the current field values" />
+    <Description languagecode="1044" description="Sets the Display Name based on the current field values" />
   </Descriptions>
 </Workflow>

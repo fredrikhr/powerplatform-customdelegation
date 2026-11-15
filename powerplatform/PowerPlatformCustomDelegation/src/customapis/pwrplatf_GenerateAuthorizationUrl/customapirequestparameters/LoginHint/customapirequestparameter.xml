@@ -1,12 +1,1 @@
-<customapirequestparameter uniquename="LoginHint">
-  <description default="Pre-fill the username and email address field of the sign-in page for the user.">
-    <label description="Pre-fill the username and email address field of the sign-in page for the user." languagecode="1033" />
-  </description>
-  <displayname default="Login Hint">
-    <label description="Login Hint" languagecode="1033" />
-  </displayname>
-  <iscustomizable>1</iscustomizable>
-  <isoptional>1</isoptional>
-  <name>LoginHint</name>
-  <type>10</type>
-</customapirequestparameter>
+<customapirequestparameter uniquename="LoginHint"></customapirequestparameter>

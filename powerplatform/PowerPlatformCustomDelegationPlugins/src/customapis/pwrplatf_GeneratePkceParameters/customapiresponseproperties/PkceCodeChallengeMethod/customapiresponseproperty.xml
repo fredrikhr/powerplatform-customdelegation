@@ -1,0 +1,13 @@
+<customapiresponseproperty uniquename="PkceCodeChallengeMethod">
+  <description default="Method used to calculate the Code Challenge given the Code Verifier, value is always S256">
+    <label description="Method used to calculate the Code Challenge given the Code Verifier, value is always S256" languagecode="1033" />
+    <label description="Method used to calculate the Code Challenge given the Code Verifier, value is always S256" languagecode="1044" />
+  </description>
+  <displayname default="PKCE Code Challenge Method">
+    <label description="PKCE Code Challenge Method" languagecode="1033" />
+    <label description="PKCE Code Challenge Method" languagecode="1044" />
+  </displayname>
+  <iscustomizable>1</iscustomizable>
+  <name>PkceCodeChallengeMethod</name>
+  <type>10</type>
+</customapiresponseproperty>

@@ -25,5 +25,6 @@
   <PrimaryEntity>msal_confidentialclientconfiguration</PrimaryEntity>
   <LocalizedNames>
     <LocalizedName languagecode="1033" description="OAuth2 Confidential Client Configuration | Auto Display Name" />
+    <LocalizedName languagecode="1044" description="OAuth2 Confidential Client Configuration | Auto Display Name" />
   </LocalizedNames>
 </Workflow>

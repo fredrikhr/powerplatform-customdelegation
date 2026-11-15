@@ -24,8 +24,10 @@
   <PrimaryEntity>az_keyvaultreference</PrimaryEntity>
   <LocalizedNames>
     <LocalizedName languagecode="1033" description="Azure Key Vault Reference | Parent, Key Vault Name → Requirement Parent (component)" />
+    <LocalizedName languagecode="1044" description="Azure Key Vault Reference | Parent, Key Vault Name → Requirement Parent (component)" />
   </LocalizedNames>
   <Descriptions>
     <Description languagecode="1033" description="Decide requirement of field Parent (component) based on value for field Parent or Key Vault Name" />
+    <Description languagecode="1044" description="Decide requirement of field Parent (component) based on value for field Parent or Key Vault Name" />
   </Descriptions>
 </Workflow>

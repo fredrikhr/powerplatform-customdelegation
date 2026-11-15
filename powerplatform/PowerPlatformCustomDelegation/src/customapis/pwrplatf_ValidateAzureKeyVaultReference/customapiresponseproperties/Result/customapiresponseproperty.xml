@@ -1,11 +1,1 @@
-<customapiresponseproperty uniquename="Result">
-  <description default="The result of the validation">
-    <label description="The result of the validation" languagecode="1033" />
-  </description>
-  <displayname default="Result">
-    <label description="Result" languagecode="1033" />
-  </displayname>
-  <iscustomizable>1</iscustomizable>
-  <name>Result</name>
-  <type>10</type>
-</customapiresponseproperty>
+<customapiresponseproperty uniquename="Result"></customapiresponseproperty>

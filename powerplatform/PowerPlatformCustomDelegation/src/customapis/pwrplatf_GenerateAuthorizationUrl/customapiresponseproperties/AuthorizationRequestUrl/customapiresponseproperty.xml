@@ -1,11 +1,1 @@
-<customapiresponseproperty uniquename="AuthorizationRequestUrl">
-  <description default="URL to which the user should be redirected to complete authentication">
-    <label description="URL to which the user should be redirected to complete authentication" languagecode="1033" />
-  </description>
-  <displayname default="Authorization Request URL">
-    <label description="Authorization Request URL" languagecode="1033" />
-  </displayname>
-  <iscustomizable>1</iscustomizable>
-  <name>AuthorizationRequestUrl</name>
-  <type>10</type>
-</customapiresponseproperty>
+<customapiresponseproperty uniquename="AuthorizationRequestUrl"></customapiresponseproperty>

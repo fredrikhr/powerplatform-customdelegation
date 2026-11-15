@@ -1,0 +1,20 @@
+<customapi uniquename="pwrplatf_DecodeAuthorizationUrlState">
+  <allowedcustomprocessingsteptype>0</allowedcustomprocessingsteptype>
+  <bindingtype>0</bindingtype>
+  <description default="Decodes the encrypted state parameter in a user authorization callback">
+    <label description="Decodes the encrypted state parameter in a user authorization callback" languagecode="1033" />
+    <label description="Decodes the encrypted state parameter in a user authorization callback" languagecode="1044" />
+  </description>
+  <displayname default="Decode User Authorization URL state">
+    <label description="Decode User Authorization URL state" languagecode="1033" />
+    <label description="Decode User Authorization URL state" languagecode="1044" />
+  </displayname>
+  <iscustomizable>1</iscustomizable>
+  <isfunction>0</isfunction>
+  <isprivate>0</isprivate>
+  <name>Decode User Authorization URL state</name>
+  <plugintypeid>
+    <plugintypeexportkey>DCC3D889A506BB6C77E4F3EB7393E9E6EBBF0B3F0E154703AC19FD840240DF28</plugintypeexportkey>
+  </plugintypeid>
+  <workflowsdkstepenabled>0</workflowsdkstepenabled>
+</customapi>

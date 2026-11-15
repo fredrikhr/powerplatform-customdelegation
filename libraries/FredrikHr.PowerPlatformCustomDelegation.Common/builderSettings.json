@@ -12,7 +12,8 @@
   "entityNamesFilter": [
     "az_keyvaultreference",
     "entra_serviceprincipalreference",
-    "oauth2_clientidreference"
+    "oauth2_clientidreference",
+    "msal_confidentialclientconfiguration"
   ],
   "emitEntityETC": false,
   "emitVirtualAttributes": false

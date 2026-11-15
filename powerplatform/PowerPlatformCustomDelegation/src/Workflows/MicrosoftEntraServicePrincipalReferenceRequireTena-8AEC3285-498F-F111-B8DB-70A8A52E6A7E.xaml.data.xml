@@ -24,8 +24,10 @@
   <PrimaryEntity>entra_serviceprincipalreference</PrimaryEntity>
   <LocalizedNames>
     <LocalizedName languagecode="1033" description="Microsoft Entra Service Principal Reference | Require Tenant when Instance is not Automatic" />
+    <LocalizedName languagecode="1044" description="Microsoft Entra Service Principal Reference | Require Tenant when Instance is not Automatic" />
   </LocalizedNames>
   <Descriptions>
     <Description languagecode="1033" description="Requires Tenant when Instance is not Automatic" />
+    <Description languagecode="1044" description="Requires Tenant when Instance is not Automatic" />
   </Descriptions>
 </Workflow>

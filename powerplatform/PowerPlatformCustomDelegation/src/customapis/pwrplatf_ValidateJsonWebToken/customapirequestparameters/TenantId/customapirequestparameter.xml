@@ -1,12 +1,1 @@
-<customapirequestparameter uniquename="TenantId">
-  <description default="The Tenant ID or registrered domain name of an Entra ID Tenant">
-    <label description="The Tenant ID or registrered domain name of an Entra ID Tenant" languagecode="1033" />
-  </description>
-  <displayname default="Tenant">
-    <label description="Tenant" languagecode="1033" />
-  </displayname>
-  <iscustomizable>1</iscustomizable>
-  <isoptional>1</isoptional>
-  <name>TenantId</name>
-  <type>10</type>
-</customapirequestparameter>
+<customapirequestparameter uniquename="TenantId"></customapirequestparameter>

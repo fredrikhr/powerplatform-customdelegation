@@ -1,0 +1,12 @@
+<customapirequestparameter uniquename="ClientCredentialsSource">
+  <description default="Entity object specifying the source for the credentials used to authenticate as the requested application">
+    <label description="Entity object specifying the source for the credentials used to authenticate as the requested application" languagecode="1033" />
+  </description>
+  <displayname default="Client Credentials Source">
+    <label description="Client Credentials Source" languagecode="1033" />
+  </displayname>
+  <iscustomizable>1</iscustomizable>
+  <isoptional>1</isoptional>
+  <name>ClientCredentialsSource</name>
+  <type>3</type>
+</customapirequestparameter>

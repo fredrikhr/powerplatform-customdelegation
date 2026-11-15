@@ -38,13 +38,13 @@ Prefer: odata.include-annotations=*
 {{
   request.options.json = {
     Scopes: [`${dataverse_instanceUrl}/.default`],
-    ApplicationEntity: {
+    Application: {
       "@type": "Microsoft.Dynamics.CRM.managedidentity",
       name: "Fredriksperiment",
       // tenantid: "<tenant-id>", // Not required
       applicationid: "6a7576eb-e377-4b0e-995b-f79de45e8d59",
     },
-    ClientCredentialsSourceEntity: {
+    ClientCredentialsSource: {
       "@type": "Microsoft.Dynamics.CRM.keyvaultreference",
       keytype: 0,
       keyvaulturi: dataverse_applicationCredentials_keyVaultUri,
@@ -69,12 +69,12 @@ Prefer: odata.include-annotations=*
 {{
   request.options.json = {
     Scopes: ["api://AzureADTokenExchange/.default"],
-    ApplicationEntity: {
+    Application: {
       "@type": "Microsoft.Dynamics.CRM.managedidentity",
       name: "FredrikHr Power Platform Managed Identity Agent Blueprint",
       applicationid: "e5a2f785-3a15-4e6b-91f9-2124c2cd26ec",
     },
-    ClientCredentialsSourceEntity: {
+    ClientCredentialsSource: {
       "@type": "Microsoft.Dynamics.CRM.keyvaultreference",
       keytype: 0,
       keyvaulturi: dataverse_blueprintCredentials_keyVaultUri,

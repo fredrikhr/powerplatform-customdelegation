@@ -10,8 +10,10 @@ public sealed class AcquireForClientAccessTokenPlugin()
 {
     internal static class InputParameterNames
     {
+        internal const string Application = nameof(Application);
+        internal const string ClientConfiguration = nameof(ClientConfiguration);
+        internal const string ClientCredentialsSource = nameof(ClientCredentialsSource);
         internal const string Scopes = nameof(Scopes);
-        internal const string FmiPath = nameof(FmiPath);
     }
 
     protected override string AcquireAccessTokenCore(
@@ -21,7 +23,13 @@ public sealed class AcquireForClientAccessTokenPlugin()
         _ = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
         info ??= new(serviceProvider);
         AzureUtility azureUtility = new(new PowerPlatformFicTokenCredential(serviceProvider));
-        MsalPluginUtility msalUtility = new(serviceProvider, info, azureUtility);
+        MsalPluginUtility msalUtility = new(
+            serviceProvider,
+            info,
+            azureUtility,
+            InputParameterNames.Application,
+            InputParameterNames.ClientCredentialsSource,
+            InputParameterNames.ClientConfiguration);
         var context = serviceProvider.Get<IPluginExecutionContext2>();
         ParameterCollection inputs = context.InputParameters;
 
@@ -45,14 +53,6 @@ public sealed class AcquireForClientAccessTokenPlugin()
             .Build();
         AcquireTokenForClientParameterBuilder msalAcquire =
             msalClient.AcquireTokenForClient(scopes);
-
-        if (inputs.TryGetValue(
-            InputParameterNames.FmiPath,
-            out string? fmiPath) &&
-            !string.IsNullOrEmpty(fmiPath))
-        {
-            msalAcquire = msalAcquire.WithFmiPath(fmiPath);
-        }
 
         AuthenticationResult msalAuthResult = msalAcquire.ExecuteAsync()
             .GetAwaiter().GetResult();

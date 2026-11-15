@@ -1,0 +1,14 @@
+<customapirequestparameter uniquename="IncludeIdToken">
+  <description default="Include request for ID Token in the generated Authorization URL.">
+    <label description="Include request for ID Token in the generated Authorization URL." languagecode="1033" />
+    <label description="Include request for ID Token in the generated Authorization URL." languagecode="1044" />
+  </description>
+  <displayname default="Include ID Token">
+    <label description="Include ID Token" languagecode="1033" />
+    <label description="Include ID Token" languagecode="1044" />
+  </displayname>
+  <iscustomizable>1</iscustomizable>
+  <isoptional>1</isoptional>
+  <name>IncludeIdToken</name>
+  <type>0</type>
+</customapirequestparameter>

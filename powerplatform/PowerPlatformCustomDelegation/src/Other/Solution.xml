@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<ImportExportXml version="9.2.26092.142" SolutionPackageVersion="9.2" languagecode="1033" generatedBy="CrmLive" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" OrganizationVersion="9.2.26092.142" OrganizationSchemaType="Standard" CRMServerServiceabilityVersion="9.2.26092.00142">
+<ImportExportXml version="9.2.26111.138" SolutionPackageVersion="9.2" languagecode="1033" generatedBy="CrmLive" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" OrganizationVersion="9.2.26111.138" OrganizationSchemaType="Standard" CRMServerServiceabilityVersion="9.2.26111.00138">
   <SolutionManifest>
     <UniqueName>PowerPlatformCustomDelegation</UniqueName>
     <LocalizedNames>
@@ -87,7 +87,7 @@
         <Dependent type="29" displayName="OAuth2 Confidential Client Configuration | Auto Display Name" id="{4e24eda1-b0b5-f111-aaae-002248f4083c}" />
       </MissingDependency>
       <MissingDependency>
-        <Required type="1" schemaName="systemuser" displayName="SystemUser" parentSchemaName="" solution="msdyn_PowerAdminSettingsEmail (2.2.3538.1)" />
+        <Required type="1" schemaName="systemuser" displayName="SystemUser" parentSchemaName="" solution="msdyn_PowerAdminSettingsEmail (2.2.3552.1)" />
         <Dependent type="1" schemaName="systemuser" displayName="SystemUser" />
       </MissingDependency>
       <MissingDependency>
@@ -151,18 +151,14 @@
         <Dependent type="80" schemaName="msal_ConfidentialClientManagement" displayName="MSAL Confidential Client Management" />
       </MissingDependency>
       <MissingDependency>
-        <Required type="66" schemaName="MscrmControls.ModelForm.ModelFormControl" displayName="MscrmControls.ModelForm.ModelFormControl" solution="BaseCustomControlsCore (9.0.2609.2006)">
-          <package appName="Base Custom Controls" version="9.0.2609.2006">BaseCustomControlsCore (9.0.2609.2006)</package>
+        <Required type="66" schemaName="MscrmControls.ModelForm.ModelFormControl" displayName="MscrmControls.ModelForm.ModelFormControl" solution="BaseCustomControlsCore (9.0.2611.1008)">
+          <package appName="Base Custom Controls" version="9.0.2611.1008">BaseCustomControlsCore (9.0.2611.1008)</package>
         </Required>
         <Dependent type="60" displayName="Main Form" parentDisplayName="OAuth2 Confidential Client Configuration" id="{caf944d7-a461-4820-a513-3c8268e8a8e3}" />
       </MissingDependency>
       <MissingDependency>
-        <Required type="ManagedIdentity" solution="PowerPlatformCustomDelegationBase (1.0.0)" id="{1304a7e4-ed28-f011-8c4d-7c1e5226ec1f}" />
-        <Dependent type="PluginPackage" displayName="pwrplatf_CustomDelegationPlugins" id.uniquename="pwrplatf_CustomDelegationPlugins" />
-      </MissingDependency>
-      <MissingDependency>
-        <Required type="SettingDefinition" displayName="AppChannel" solution="msdyn_AppFrameworkInfraExtensions (1.0.0.20)" id.uniquename="AppChannel">
-          <package appName="PowerAppsAppFramework Package" version="1.0.0.26">PowerAppsAppFramework_Anchor (1.0.0.26)</package>
+        <Required type="SettingDefinition" displayName="AppChannel" solution="msdyn_AppFrameworkInfraExtensions (1.0.0.28)" id.uniquename="AppChannel">
+          <package appName="PowerAppsAppFramework Package" version="1.0.0.30">PowerAppsAppFramework_Anchor (1.0.0.30)</package>
         </Required>
         <Dependent type="AppSetting" displayName="parentappmoduleid.uniquename=msal_ConfidentialClientManagement,settingdefinitionid.uniquename=AppChannel" id.parentappmoduleid.uniquename="msal_ConfidentialClientManagement" id.settingdefinitionid.uniquename="AppChannel" />
       </MissingDependency>

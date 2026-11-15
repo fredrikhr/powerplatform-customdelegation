@@ -1,12 +1,1 @@
-<customapirequestparameter uniquename="CommonRedirectUri">
-  <description default="Redirect URI registered for the application">
-    <label description="Redirect URI registered for the application" languagecode="1033" />
-  </description>
-  <displayname default="Common Redirect URI">
-    <label description="Common Redirect URI" languagecode="1033" />
-  </displayname>
-  <iscustomizable>1</iscustomizable>
-  <isoptional>0</isoptional>
-  <name>CommonRedirectUri</name>
-  <type>10</type>
-</customapirequestparameter>
+<customapirequestparameter uniquename="CommonRedirectUri"></customapirequestparameter>

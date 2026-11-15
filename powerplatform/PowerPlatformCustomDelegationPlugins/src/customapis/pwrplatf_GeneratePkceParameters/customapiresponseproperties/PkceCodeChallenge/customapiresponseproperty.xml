@@ -1,0 +1,13 @@
+<customapiresponseproperty uniquename="PkceCodeChallenge">
+  <description default="Code Challenge calculated from the Code Verifier using the given Code Challenge Method">
+    <label description="Code Challenge calculated from the Code Verifier using the given Code Challenge Method" languagecode="1033" />
+    <label description="Code Challenge calculated from the Code Verifier using the given Code Challenge Method" languagecode="1044" />
+  </description>
+  <displayname default="PKCE Code Challenge">
+    <label description="PKCE Code Challenge" languagecode="1033" />
+    <label description="PKCE Code Challenge" languagecode="1044" />
+  </displayname>
+  <iscustomizable>1</iscustomizable>
+  <name>PkceCodeChallenge</name>
+  <type>10</type>
+</customapiresponseproperty>
